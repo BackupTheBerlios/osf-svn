@@ -1,3 +1,9 @@
+osf-web (20050218) unstable; urgency=low
+
+  * Bug fix release
+
+ -- Peter Eisentraut <peter.eisentraut@credativ.de>  Fri, 18 Feb 2005 10:36:23 +0100
+
 osf-web (20041207) unstable; urgency=low
 
   * Converted to CDBS

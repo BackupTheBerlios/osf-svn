@@ -2,6 +2,9 @@ package OSF::Validate;
 
 use strict;
 use warnings;
+use English;
+
+use File::Temp qw(tempfile);
 
 use Exporter;
 use vars qw(@ISA @EXPORT);
@@ -56,15 +59,13 @@ sub is_valid_host($)
 sub is_valid_regexp
 {
     my $regexp = $_[0];
-    # we could do perl -e '/ ... /' but then we would have to escape shell
+    # We could do perl -e '/ ... /' but then we would have to escape shell
     # metacharacters...
-    my $filename = "/tmp/csg-regexptest.$$";
-    open(REGEXPFILE, ">$filename")
-      or die "Could not open $filename for writing: $!";
-    $regexp =~ s,/,\/,g;
-    print REGEXPFILE "/".$regexp."/";
-    close(REGEXPFILE);
-    system("perl $filename >/dev/null 2>&1");
+    my ($fh, $filename) = tempfile() or die "Could not create temporary file: $!";
+    $regexp =~ s,/,\\/,g;
+    print $fh "/".$regexp."/";
+    close($fh);
+    system("$EXECUTABLE_NAME $filename >/dev/null 2>&1");
     unlink($filename);
     my $ret = $? >> 8;
     if ($ret == 0) {
