@@ -1,3 +1,9 @@
+osf-web (20050220) unstable; urgency=low
+
+  * Squirrelmail should send emails to port 10025 directly
+
+ -- Peter Eisentraut <peter.eisentraut@credativ.de>  Sun, 20 Feb 2005 09:35:42 +0100
+
 osf-web (20050218) unstable; urgency=low
 
   * Bug fix release
