@@ -9,7 +9,7 @@
       <holder>credativ GmbH</holder>
     </copyright>
 
-    <date>05.01.2005</date>
+    <date>18.02.2005</date>
   </bookinfo>
 
 
@@ -951,6 +951,42 @@ passwd: password updated successfully
       Aufbereitung.  Diese sollen helfen, das E-Mail-Aufkommen und die
       Systemlast zu überwachen.  Selbstverständlich können Sie auch
       eigene Überwachungs- oder Analysewerkzeuge einsetzen.</para>
+    </sect1>
+    
+    <sect1 id="admin-firewall">
+      <title>Firewall</title>
+      
+      <para>Der Open Security Filter ist nicht mit einer Firewall
+      (d.h. einem Paketfilter) vorkonfiguriert.  Wenn Sie eine
+      Firewall einrichten möchten, empfehlen wir den Einsatz von
+      <application>Firehol</application>.  Beispielkonfigurationen
+      finden Sie in
+      <filename>/usr/share/osf-base/base-conf/firehol.conf-1nic</filename>
+      (für Systeme mit einer Netzwerkkarte) und
+      <filename>/usr/share/osf-base/base-conf/firehol.conf-2nic</filename>
+      (für Systeme mit zwei Netzwerkkarten).  Um die Firewall zu starten
+
+      <orderedlist>
+        <listitem>
+          <para>kopieren Sie die passende Konfiguration nach
+          <filename>/etc/firehol/firehol.conf</filename>,</para>
+        </listitem>
+
+        <listitem>
+          <para>bearbeiten Sie die Datei
+          <filename>/etc/default/firehol</filename> und setzen Sie
+          <literal>START_FIREHOL=YES</literal>,</para>
+        </listitem>
+
+        <listitem>
+          <para>starten Sie die Firewall mit
+          <command>/etc/init.d/firehol start</command>.</para>
+        </listitem>
+      </orderedlist>
+
+      Weitere Informationen zur Konfiguration erhalten Sie mit den
+      Befehlen <command>man 1 firehol</command> und <command>man 5
+      firehol.conf</command>.</para>
     </sect1>
 
 <!--
