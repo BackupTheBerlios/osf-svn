@@ -1,0 +1,32 @@
+osf-web (20041207) unstable; urgency=low
+
+  * Converted to CDBS
+  * Fixes for i18n
+
+ -- Peter Eisentraut <peter.eisentraut@credativ.de>  Tue,  7 Dec 2004 10:53:55 +0100
+
+osf-web (20041203) unstable; urgency=low
+
+  * Turned off AddDefaultCharset
+  * Linked credativ logo to web site
+  * Fixed config upload
+
+ -- Peter Eisentraut <peter.eisentraut@credativ.de>  Fri,  3 Dec 2004 10:20:13 +0100
+
+osf-web (20041126) unstable; urgency=low
+
+  * Removed configuration of nameserver (must be done by installer)
+
+ -- Peter Eisentraut <peter.eisentraut@credativ.de>  Fri, 26 Nov 2004 13:33:36 +0100
+
+osf-web (20041116) unstable; urgency=low
+
+  * Added fetchmail configuration
+
+ -- Peter Eisentraut <peter.eisentraut@credativ.de>  Tue, 16 Nov 2004 14:56:03 +0100
+
+osf-web (20041008) unstable; urgency=low
+
+  * Initial release
+
+ -- Peter Eisentraut <peter.eisentraut@credativ.de>  Fri,  8 Oct 2004 16:46:57 +0200

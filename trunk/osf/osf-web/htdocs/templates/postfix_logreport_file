@@ -1,0 +1,11 @@
+[% WRAPPER common_htmlpage title="Logauswertung des E-Mail-Systems" %]
+
+<div class="box">
+<pre>[% INSERT $file FILTER html %]</pre>
+</div>
+
+<p>
+  <a href="[% self %]">Zurück zur Übersicht</a>&nbsp;|&nbsp;<a href='./'>Zurück zur Hauptseite</a>
+</p>
+
+[% END %]

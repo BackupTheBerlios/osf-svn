@@ -1,0 +1,69 @@
+#! @PERL@
+
+BEGIN {
+    unshift @INC, '@datadir@';
+}
+
+use strict;
+no strict qw(refs);
+use warnings;
+use English;
+
+use CGI qw(:standard);
+
+use OSF::Config;
+use OSF::HTML;
+use Template;
+
+my $template = Template->new( { INCLUDE_PATH => "@datadir@/templates/htdocs" } );
+my $default_config_file = '@datadir@/../osf-base/default-config.pl';
+
+my $cgi = new CGI();
+
+
+if ($cgi->param("backup")) {
+    print $cgi->header(-content_type => 'application/octet-stream',
+		       -content_transfer_encoding => 'binary',
+		       -content_disposition => "inline; filename=open-security-filter.conf");
+
+    my %config = read_config_file();
+    print "# Open Security Filter configuration backup\n";
+    print serialize_config(%config);
+}
+elsif ($cgi->param("restore")) {
+    my %config;
+    my $content;
+
+    html_top($cgi);
+
+    my $fh = $cgi->upload('file');
+    $content = '';
+    while (<$fh>) {
+	$content .= $_;
+    }
+    %config = unserialize_config($content);
+
+    eval {
+	write_config_file(%config);
+    };
+    $template->process('common_submitresponse', { error => $@ });
+}
+elsif ($cgi->param("reset")) {
+    my %config;
+
+    html_top($cgi);
+
+    %config = read_config_file($default_config_file);
+
+    eval {
+	write_config_file(%config);
+    };
+    $template->process('common_submitresponse', { error => $@ });
+}
+else {
+    html_top($cgi);
+    $template->process('config_backup')
+      or die $template->error();
+}
+
+exit 0;

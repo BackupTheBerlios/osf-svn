@@ -1,0 +1,283 @@
+#! /bin/bash
+
+CONFDIR=/etc/osf-pull-config
+LOCALDIR=/var/lib/osf-pull-config
+LOCKDIR=/var/lock/osf-pull-config
+#ROOT=$HOME/fake-root
+
+
+export PATH=/sbin:/usr/sbin:/usr/local/sbin:/usr/local/bin:/usr/bin:/bin
+
+me=$(basename $0)
+
+if [ -f $CONFDIR/pull-config.conf ]; then
+	. $CONFDIR/pull-config.conf
+fi
+
+export RSYNC_RSH
+
+
+
+function log () {
+	logger -p user.notice -t "$me[$$]" -- "$1"
+}
+
+function checkstatus () {
+	status=$?
+	if [ $status -ne 0 ]; then
+		log "failed with status $status"
+	fi
+}
+
+function lock () {
+	_prog=$1
+	if [ -z "$prog" ]; then
+		return 2
+	fi
+	mkdir -p $LOCKDIR
+	touch $LOCKDIR/"reload-$_prog"
+}
+
+function unlock () {
+	_prog=$1
+	if [ -z "$_prog" ]; then
+		return 2
+	fi
+	rm -f $LOCKDIR/"reload-$_prog"
+}
+
+
+if [ -z "$MASTER" ]; then
+	log "no master specified"
+	exit 1
+fi
+
+MASTER_SERVER=$( echo "$MASTER" | sed -e 's/^.*@\(.*\):.*/\1/' )
+
+if [ -z "$MASTER_SERVER" ]; then
+       log "no master server specified"
+       exit 1
+fi
+
+ping -c 1 $MASTER_SERVER > /dev/null 2>&1 || exit 0;
+
+
+if [ ! -d "$LOCALDIR" ]; then
+	mkdir -p "$LOCALDIR"
+fi
+
+
+rsync --delete-after --copy-links --copy-unsafe-links --ignore-times --archive --quiet \
+	--cvs-exclude --include-from="$CONFDIR/includelist" "$MASTER" "$LOCALDIR"
+
+
+reload_aliases=no
+reload_amavisd=no
+reload_dansguardian=no
+reload_fetchmail=no
+reload_bind=no
+reload_postfix=no
+reload_spamd=no
+reload_squid=no
+reload_syslog=no
+reload_syslog_ng=no
+reload_ntpd=no
+
+
+pushd "$LOCALDIR" >/dev/null
+for x in $(find -type f -print); do
+	file=$(expr X"$x" : X'\./\(.*\)$')
+	target="$ROOT/$file"
+
+	if ! diff -N -q $target $file >/dev/null; then
+		log "file \"$file\" was changed" |
+		if [ -f $file ]; then
+			mkdir -p $(dirname $target)
+			cp "$file" "$target"
+		else
+			# file was deleted on master
+			rm "$target"
+		fi
+
+		case $file in
+			etc/aliases)
+				reload_aliases=yes
+				;;
+			etc/amavis/*)
+				reload_amavisd=yes
+				;;
+			etc/dansguardian/*)
+				reload_dansguardian=yes
+				;;
+			etc/fetchmailrc)
+				reload_fetchmail=yes
+				;;
+			etc/postfix/*)
+				reload_postfix=yes
+				;;
+			etc/mail/spamassassin/*)
+				reload_spamd=yes
+				reload_amavisd=yes
+				;;
+			etc/bind/* | etc/named.conf)
+				reload_bind=yes
+				;;
+			etc/squid/*)
+				reload_squid=yes
+				;;
+			etc/syslog.conf)
+				reload_syslog=yes
+				;;
+			etc/syslog-ng/*)
+				reload_syslog_ng=yes
+				;;
+			etc/ntp.conf)
+				reload_ntpd=yes
+				;;
+		esac
+	fi
+done
+
+(
+
+if [ $reload_aliases = yes ]; then
+	lock "aliases"
+	log "reloading aliases"
+	if [ -x /usr/bin/newaliases ]; then
+		/usr/bin/newaliases
+	fi
+	checkstatus
+	unlock "aliases"
+fi
+
+if [ $reload_amavisd = yes ]; then
+	lock "amavisd"
+	log "reloading amavisd"
+	# Debian
+	if [ -x /etc/init.d/amavis ]; then
+		/etc/init.d/amavis force-reload
+	fi
+	# SUSE
+	if [ -x /etc/init.d/amavisd ]; then
+		/etc/init.d/amavisd force-reload
+	fi
+	checkstatus
+	unlock "amavisd"
+fi
+
+if [ $reload_dansguardian = yes ]; then
+	lock "dansguardian"
+	log "reloading dansguardian"
+	if [ -x /etc/init.d/dansguardian ]; then
+		/etc/init.d/dansguardian force-reload
+	fi
+	checkstatus
+	unlock "dansguardian"
+fi
+
+if [ $reload_fetchmail = yes ]; then
+	lock "fetchmail"
+	log "reloading fetchmail"
+	chmod 0600 /etc/fetchmailrc
+	if [ -x /etc/init.d/fetchmail ]; then
+		if ! grep -q '^poll' /etc/fetchmailrc; then
+			/etc/init.d/fetchmail stop
+		else
+			/etc/init.d/fetchmail restart
+		fi
+	fi
+	checkstatus
+	unlock "fetchmail"
+fi
+
+if [ $reload_bind = yes ]; then
+	lock "bind"
+	log "reloading bind"
+	# Debian
+	if [ -x /etc/init.d/bind9 ]; then
+		/etc/init.d/bind9 force-reload
+	fi
+	# SUSE
+	if [ -x /etc/init.d/named ]; then
+		/etc/init.d/named force-reload
+	fi
+	checkstatus
+	unlock "bind"
+fi
+
+if [ $reload_postfix = yes ]; then
+	lock "postfix"
+	log "reloading postfix"
+	if [ -x /etc/init.d/postfix ]; then
+		/etc/init.d/postfix force-reload
+	fi
+	checkstatus
+	unlock "postfix"
+fi
+
+if [ $reload_spamd = yes ]; then
+	lock "spamd"
+	log "reloading spamd"
+	# Debian
+	if [ -x /etc/init.d/spamassassin ]; then
+		/etc/init.d/spamassassin force-reload
+	fi
+	# SUSE
+	if [ -x /etc/init.d/spamd ]; then
+		/etc/init.d/spamd force-reload
+	fi
+	checkstatus
+	unlock "spamd"
+fi
+
+if [ $reload_squid = yes ]; then
+	lock "squid"
+	log "reloading squid"
+	if [ -x /etc/init.d/squid ]; then
+		/etc/init.d/squid force-reload
+	fi
+	checkstatus
+	lock "squid"
+fi
+
+if [ $reload_syslog = yes ]; then
+	lock "syslog"
+	log "reloading syslog"
+	# Debian
+	if [ -x /etc/init.d/sysklogd ]; then
+		/etc/init.d/sysklogd force-reload
+	fi
+	# SUSE
+	if [ -x /etc/init.d/syslog ]; then
+		/etc/init.d/syslog force-reload
+	fi
+	checkstatus
+	unlock "syslog"
+fi
+
+if [ $reload_syslog_ng = yes ]; then
+	lock "syslog-ng"
+	log "reloading syslog-ng"
+	if [ -x /etc/init.d/syslog-ng ]; then
+		/etc/init.d/syslog-ng force-reload
+	fi
+	checkstatus
+	unlock "syslog-ng"
+fi
+
+if [ $reload_ntpd = yes ]; then
+	lock "ntpd"
+	log "reloading ntpd"
+	# Debian
+	if [ -x /etc/init.d/ntp-server ]; then
+		/etc/init.d/ntp-server force-reload
+	fi
+	# SUSE
+	if [ -x /etc/init.d/xntpd ]; then
+		/etc/init.d/xntpd force-reload
+	fi
+	checkstatus
+	unlock "ntpd"
+fi
+
+) >/dev/null | logger -p user.warning -t "$me[$$]"

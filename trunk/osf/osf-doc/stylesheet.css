@@ -1,0 +1,11 @@
+.book .titlepage { 
+  text-align: center;
+}
+
+.remark, .comment { 
+ color: red;
+}
+
+.screen, .programlisting {
+        margin-left: 4ex;
+}

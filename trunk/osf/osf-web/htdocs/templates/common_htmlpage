@@ -1,0 +1,3 @@
+[% INCLUDE common_htmltop %]
+[% content %]
+[% INCLUDE common_htmlbottom %]

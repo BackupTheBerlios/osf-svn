@@ -1,0 +1,257 @@
+#! @PERL@
+
+BEGIN {
+    unshift @INC, '@datadir@';
+}
+
+use strict;
+no strict qw(refs);
+use warnings;
+use English;
+
+use CGI qw(:standard);
+
+use OSF::HTML;
+use OSF::Config;
+use OSF::Validate;
+use OSF::FormBuilder;
+
+use Template;
+
+my $template = Template->new( { INCLUDE_PATH => "@datadir@/templates/htdocs" } );
+
+
+# mit amavisd-static.conf abgleichen!
+our @std_extensions_exec = qw(
+    386 app asx bas bat bin btm cla class chm cmd com cpl crt csc csh dll drv exe
+    fon fxp hlp hta inf ini ins isp js jse ksh lib lnk msc msi msp mst obj ocx otf ovl
+    pcd pgm pif prc prf prg reg scf scr sct sh shb shs smm sys url vb vbe vbs vxd wsc
+    wsf wsh
+);
+
+our @std_extensions_office = qw(
+    ade adp doc dot mda mdb mde mdt mdw mdz ops ppt rtf xls
+);
+
+our @std_extensions_web = qw(
+    asp css htm html mht mhtm mhtml
+);
+
+our @std_extensions_archive = qw(
+    uue hqx F Z gz bz bz2 lzo zip rar lha lzh arc arj zoo tar cpio tnef cab tgz
+    cdr dmg smi sit sea
+);
+
+
+our @form_elements =
+  (
+   {
+    name => 'osf_virus_check_enabled',
+    type => 'boolean',
+    title => 'Virusprüfung einschalten?',
+    description =>
+    'Wenn Sie hier &#8222;Aus&#8220; wählen, dann wird die Virusprüfung komplett abgeschaltet.'
+   },
+   {
+    name => 'osf_spam_check_enabled',
+    type => 'boolean',
+    title => 'Spamprüfung einschalten?',
+    description =>
+    'Wenn Sie hier &#8222;Aus&#8220; wählen, dann wird die Spamprüfung komplett abgeschaltet.'
+   },
+   {
+    name => 'warnvirusrecip',
+    type => 'boolean',
+    title => 'Bei Virus Warnung an Empfänger?',
+    description =>
+    'Soll bei einer E-Mail, die einen Virus enthält, auch eine Warnung an den Empfänger '
+    .'gesendet werden?  Die eigentliche E-Mail mit dem Virus wird dem Empfänger auf '
+    .'keinen Fall zustellt.'
+   },
+   {
+    name => 'warnbannedrecip',
+    type => 'boolean',
+    title => 'Bei verbotenem Anhang Warnung an Empfänger?',
+    description =>
+    'Soll bei einer E-Mail, die einen verbotenen Anhang enthält, auch eine Warnung an den Empfänger '
+    .'gesendet werden?  Die eigentliche E-Mail mit dem Anhang wird dem Empfänger auf '
+    .'keinen Fall zustellt.'
+   },
+   {
+    name => 'warn_offsite',
+    type => 'boolean',
+    title => 'Warnungen auch an externe Empfänger?',
+    description =>
+    'Sollen Warnungen über Viren oder verbotene Anhänge auch an externe Empfänger gesendet werden, '
+    .'d.h. wenn die E-Mail von innen nach außen gesendet wird?'
+   },
+   {
+    name => 'osf_virus_quarantine',
+    type => 'boolean',
+    title => 'Quarantäne für geblockte E-Mail?',
+    description =>
+    'Sollen E-Mails mit Viren oder geblockten Endungen in einer Quarantäne-Mailbox abgelegt werden? '
+    .'Ansonsten werden diese E-Mails einfach gelöscht.'
+   },
+   {
+    name => 'virus_admin',
+    type => 'value',
+    title => 'E-Mail-Adresse des Administrators',
+    description =>
+    'Geben Sie hier die E-Mail-Adresse des Administrators ein, der über geblockte E-Mails mit Viren '
+    .'informiert werden soll.  Wenn Sie keine Benachrichtigungen wollen, lassen Sie dieses Feld leer.',
+    check => \&is_valid_email_address
+   },
+   {
+    name => 'osf_banned_filename_exec_extensions',
+    type => 'extchoice',
+    title => 'Anhänge mit ausführbarer Endung ablehnen?',
+    description => 
+    'Hier können Sie Anhänge, deren Dateiname eine Endung '
+    .'hat, die auf eine ausführbare Datei schließen lässt, ablehnen.',
+    list => \@std_extensions_exec
+   },
+   {
+    name => 'osf_banned_filename_double_extension',
+    type => 'boolean',
+    title => 'Anhänge mit doppelter Endung ablehnen?',
+    description =>
+    'Wenn diese Option eingeschaltet ist, dann werden Anhänge, deren Dateiname eine doppelte '
+    .'Endung hat, von der die zweite auf eine ausführbare Datei schließen lässt (z.B. test.doc.exe), '
+    .'abgelehnt.'
+   },
+   {
+    name => 'osf_banned_filename_office_extensions',
+    type => 'extchoice',
+    title => 'Anhänge mit Office-Programm-Endung ablehnen?',
+    description =>
+    'Hier können Sie Anhänge, deren Dateiname eine Endung '
+    .'hat, die auf eine Dokumentdatei für ein Microsoft-Office-Programm schließen lässt, ablehnen.',
+    list => \@std_extensions_office
+   },
+   {
+    name => 'osf_banned_filename_web_extensions',
+    type => 'extchoice',
+    title => 'Anhänge mit Web-Endung ablehnen?',
+    description =>
+    'Hier können Sie Anhänge, deren Dateiname eine Endung '
+    .'hat, die auf eine WWW-Datei schließen lässt, ablehnen.',
+    list => \@std_extensions_web
+   },
+   {
+    name => 'osf_banned_filename_archive_extensions',
+    type => 'extchoice',
+    title => 'Anhänge mit Archivendung ablehnen?',
+    description =>
+    'Hier können Sie Anhänge, deren Dateiname eine Endung '
+    .'hat, die auf eine Archivdatei schließen lässt, ablehnen.',
+    list => \@std_extensions_archive
+   },
+   {
+    name => 'osf_banned_filename_msdownload',
+    type => 'boolean',
+    title => 'Anhänge mit MIME-Typ application/x-msdownload ablehnen?',
+    description =>
+    'Wenn diese Option eingeschaltet ist, dann werden Anhänge, die den MIME-Typ '
+    .'application/x-msdownload haben, abgelehnt.  Derartige Anhänge verheißen selten Gutes.'
+   },
+   {
+    name => 'osf_banned_filename_rfc2046',
+    type => 'boolean',
+    title => 'E-Mails mit partiellen oder externen Körpern anlehnen?',
+    description =>
+    'Wenn diese Option eingeschaltet ist, dann werden Anhänge, die den MIME-Typ '
+    .'message/partial or message/external-body haben, abgelehnt. '
+    .' Derartige Anhänge verheißen selten Gutes.'
+   },
+   {
+    name => 'osf_banned_filename_extra_extensions',
+    type => 'list',
+    title => 'Weitere zu blockierende Endungen',
+    description =>
+    'Hier können Sie weitere Dateiendungen angeben, die abgelehnt werden sollen.'
+   },
+   {
+    name => 'sa_tag2_level_deflt',
+    type => 'value',
+    title => 'Spampunktzahl-Grenze',
+    description =>
+    'Ab dieser Punktzahl werden E-Mails als Spam eingeordnet.  Allgemein sind negative Werte eher kein '
+    .'Spam und positive Werte eher Spam.',
+    check => \&is_valid_sa_score
+   },
+   {
+    name => 'sa_spam_modifies_subj',
+    type => 'boolean',
+    title => 'Bei Spam Betreffzeile umschreiben?',
+    description =>
+    'Soll bei einer E-Mail, die als Spam eingestuft wurde, der Text &#8222;*** SPAM ***&#8220; in '
+    .'die Betreffzeile eingefügt werden?'
+   },
+   {
+    name => 'sa_spam_report_header',
+    type => 'boolean',
+    title => 'Bei Spam detaillierten Bericht einf&uuml;gen?',
+    description =>
+    'Soll bei einer E-Mail, die als Spam eingestuft wurde, ein detaillierter Bericht '
+    .'eingef&uuml;gt werden, der die Spampunktzahl aufschl&uuml;sselt?'
+   },
+   {
+    name => 'osf_whitelist_sender',
+    type => 'list',
+    title => 'Whitelist',
+    description => 'Tragen Sie hier Absender ein, deren E-Mail nie als Spam markiert werden soll.'
+   },
+   {
+    name => 'osf_blacklist_sender',
+    type => 'list',
+    title => 'Blacklist',
+    description => 'Tragen Sie hier Absender ein, deren E-Mail immer als Spam markiert werden soll.'
+   },
+  );
+
+
+sub print_config_form($)
+{
+    my ($cgi) = @_;
+    my %config = read_config_file();
+
+    html_top($cgi);
+    $template->process('common_htmltop', { title => "Spam- und Virenfilter konfigurieren" });
+    OSF::FormBuilder::print_config_form($cgi, @form_elements, %config);
+    $template->process('common_htmlbottom');
+    html_bottom();
+}
+
+
+sub do_submit($)
+{
+    my ($cgi) = @_;
+    my %config;
+
+    html_top($cgi);
+
+    %config = read_config_file();
+    %config = OSF::FormBuilder::form_to_config($cgi, @form_elements, %config) or return;
+    eval {
+	write_config_file(%config);
+    };
+    $template->process('common_submitresponse', { error => $@ });
+
+    html_bottom();
+}
+
+
+#
+# Main program
+#
+
+my $cgi = new CGI();
+
+if ($cgi->param("submit")) {
+	do_submit($cgi);
+} else {
+	print_config_form($cgi);
+}
+
+exit 0;

@@ -1,0 +1,59 @@
+#! @PERL@
+
+use strict;
+
+my $status = $ENV{"REDIRECT_STATUS"};
+my $url = $ENV{"REDIRECT_URL"};
+$url =~ s/&/&amp;/g;
+$url =~ s/</&lt;/g;
+$url =~ s/>/&gt;/g;
+my $server = $ENV{"REDIRECT_SERVER_NAME"};
+
+my $reason;
+my $explain;
+
+if ($status eq '400') {
+    $reason = 'Fehlerhafte Anfrage';
+    $explain = <<_EOF_;
+Ihr Browser hat eine Anfrage gesendet, die dieser Server
+nicht verstehen konnte.
+_EOF_
+} elsif ($status eq '401') {
+    $reason = 'Authorisierung erforderlich';
+    $explain = <<_EOF_;
+Dieser Server konnte nicht feststellen, ob Sie autorisiert sind,
+auf dieses Dokument zuzugreifen.  Entweder haben Sie die falsche
+Zugangsberechtigung angegeben (z.B. falsches Passwort) oder
+Ihr Browser weiß nicht, wie die benötigte Zugangsberechtigung
+zu übermitteln ist.
+_EOF_
+} elsif ($status eq '403') {
+    $reason = 'Verboten';
+    $explain = "Ihnen ist der Zugriff auf $url auf diesem Server nicht erlaubt.";
+} elsif ($status eq '404') {
+    $reason = 'Nicht gefunden';
+    $explain = "Die angeforderte URL $url wurde auf diesem Server nicht gefunden.";
+} elsif ($status eq '500') {
+    $reason = 'Interner Serverfehler';
+    $explain = "Der Server traf auf einen internen Konfigurationsfehler und kann Ihre Anfrage nicht bearbeiten.";
+} else {
+    die;
+}
+
+print <<_EOF_;
+Content-type: text/html; charset=ISO-8859-15
+Status: $status $reason
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html lang=de>
+<head>
+<title>$status $reason</title>
+</head>
+<body>
+<h1>$reason</h1>
+<p>$explain</p>
+</body>
+</html>
+_EOF_
+
+exit 0;

@@ -1,0 +1,2 @@
+var/lib/osf-pull-config
+var/lock/osf-pull-config

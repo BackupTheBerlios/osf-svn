@@ -1,0 +1,11 @@
+[%# /etc/aliases -%]
+# [% genconf_note %]
+
+postmaster:	root
+clamav:		root
+webmaster:	root
+virusalert:	postmaster
+spamalert:	postmaster
+amavis-stats:	root
+nagios-admin:	root
+root:		[% IF rootmail %][% rootmail %][% ELSE %]admin[% END %]

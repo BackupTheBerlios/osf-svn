@@ -1,0 +1,64 @@
+#! /bin/bash
+
+set -e
+
+action=$1
+lastversion=$2
+
+confdir=/usr/share/osf-web
+
+
+function configure_squirrelmail() {
+	if [ -z "$lastversion" ]; then
+		mv /etc/squirrelmail/config.php /etc/squirrelmail/config.php.orig
+	fi
+
+	cp $confdir/squirrelmail_config.php /etc/squirrelmail/config.php
+
+	ln -sf ../../squirrelmail/apache.conf /etc/apache-ssl/conf.d/squirrelmail
+}
+
+
+function configure_wwwroot() {
+	if [ ! -e /var/www/index.html ]; then
+		ln -sf $confdir/index.html /var/www/index.html
+	fi
+}
+
+
+if [ "$1" = configure ]; then
+	configure_squirrelmail
+	configure_wwwroot
+
+	if [ ! -e /var/lib/osf/postfix-logreport/mailreport-weekly.txt ]; then
+		touch /var/lib/osf/postfix-logreport/mailreport-weekly.txt
+	fi
+
+	ln -fs ../../osf-web/apache.conf /etc/apache-ssl/conf.d/osf-web
+
+	if [ ! -e /etc/osf-web/www-data/config.pl ]; then
+		cp /usr/share/osf-base/default-config.pl /etc/osf-web/www-data/config.pl
+	fi
+	osf-genconf --infile /etc/osf-web/www-data/config.pl \
+	            --outdir  /var/lib/osf/genconf
+
+	chown -R www-data:www-data /var/lib/osf/genconf/
+	chown -R www-data:www-data /etc/osf-web/www-data/
+
+	adduser --quiet www-data shadow
+
+	getent passwd virus-quarantine >/dev/null 2>&1 || adduser --gecos "Virus quarantine" virus-quarantine
+	su -c 'test -d Maildir || maildirmake Maildir' - virus-quarantine
+
+	apache-modconf apache-ssl enable mod_auth_pam
+
+	if [ ! -s /etc/apache-ssl/apache.pem ]; then
+		osf-make-ssl-cert apache
+	fi
+
+	invoke-rc.d apache-ssl restart
+fi
+
+#DEBHELPER#
+
+exit 0

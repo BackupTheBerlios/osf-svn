@@ -1,0 +1,31 @@
+#! /bin/bash
+
+set -e
+
+action=$1
+
+confdir=/usr/share/osf-web
+
+
+function remove_squirrelmail() {
+	if [ -f /etc/squirrelmail/config.php.orig ]; then
+		mv /etc/squirrelmail/config.php.orig /etc/squirrelmail/config.php
+	fi
+}
+
+
+function remove_wwwroot() {
+	if [ $(readlink /var/www/index.html) = "$confdir/index.html" ]; then
+		rm /var/www/index.html
+	fi
+}
+
+
+if [ "$action" = remove ]; then
+	remove_wwwroot
+	remove_squirrelmail
+fi
+
+#DEBHELPER#
+
+exit 0

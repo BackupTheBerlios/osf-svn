@@ -1,0 +1,123 @@
+#! @PERL@
+
+BEGIN {
+    unshift @INC, '@datadir@';
+}
+
+use strict;
+no strict qw(refs);
+use warnings;
+use English;
+
+use CGI qw(:standard);
+
+use OSF::HTML;
+use OSF::Config;
+use OSF::Validate;
+
+use Template;
+
+my $template = Template->new( { INCLUDE_PATH => "@datadir@/templates/htdocs" } );
+
+
+sub print_config_form($)
+{
+    my ($cgi) = @_;
+    my $self = $cgi->script_name();
+
+    html_top($cgi);
+
+    my %config = read_config_file();
+    my @rules = ();
+    if (defined($config{'fetchmailrules'})) {
+	@rules = @{$config{'fetchmailrules'}};
+    }
+
+    $template->process('fetchmail',
+		       {
+			config => \%config,
+			rules => \@rules,
+			self => $self
+		       } )
+      or die $template->error();
+
+    html_bottom();
+}
+
+
+sub form_to_config($%)
+{
+    my ($cgi, %config) = @_;
+    my %newrules;
+
+    if (defined($cgi->param('fetchmail_interval'))
+	&& $cgi->param('fetchmail_interval') !~ m/^\d*$/) {
+	    $template->process('common_formerror', { 'field' => 'fetchmail_interval',
+						     'value' => $cgi->param('fetchmail_interval') });
+	    return ();
+	}
+
+    foreach ('fetchmail_enabled', 'fetchmail_interval') {
+	my $current_value = $cgi->param($_);
+	$config{$_} = $current_value if defined($current_value);
+    }
+
+    foreach my $param ($cgi->param) {
+	my ($type, $key) = ($param =~ /(server|proto|ssl|remoteuser|remotepw|localuser)_(\w+)/) or next;
+	$newrules{$key}->{$type} = $cgi->param($param) unless $cgi->param("delete_$key");
+    }
+
+    my @filtered;
+    foreach (sort keys %newrules) {
+	my $rule = $newrules{$_};
+
+	# do not write empty rule
+	next if ($rule->{server} eq '' && $rule->{remoteuser} eq '' && $rule->{remotepw} eq '' && $rule->{localuser} eq '');
+
+	if (!is_valid_host($rule->{server})) {
+	    $template->process('common_formerror', { 'field' => $_, 'value' => $rule->{server} });
+	    return ();
+	}
+
+	push @filtered, $rule;
+    }
+
+    $config{'fetchmailrules'} = \@filtered;
+
+    return %config;
+}
+
+
+sub do_submit($)
+{
+    my ($cgi) = @_;
+    my $self = $cgi->script_name();
+    my %config;
+
+    html_top($cgi);
+
+    %config = read_config_file();
+    %config = form_to_config($cgi, %config) or return;
+    eval {
+	write_config_file(%config);
+    };
+    $template->process('common_submitresponse', { error => $@,
+						  self => $self });
+
+    html_bottom();
+}
+
+
+#
+# Main program
+#
+
+my $cgi = new CGI();
+
+if ($cgi->param("submit")) {
+    do_submit($cgi);
+} else {
+    print_config_form($cgi);
+}
+
+exit 0;

@@ -1,0 +1,15 @@
+[%# /etc/bind/named.conf.options -%]
+# [% genconf_note %]
+
+options {
+	directory "/var/cache/bind";
+        auth-nxdomain no;    # conform to RFC1035
+
+[% IF nameserver1 or nameserver2 or nameserver3 %]
+	forwarders {
+[% IF nameserver1 %][% nameserver1 %];[% END %]
+[% IF nameserver2 %][% nameserver2 %];[% END %]
+[% IF nameserver3 %][% nameserver3 %];[% END %]
+        };
+[% END %]
+};

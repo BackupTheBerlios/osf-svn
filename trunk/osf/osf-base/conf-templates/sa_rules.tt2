@@ -1,0 +1,61 @@
+[%# /etc/mail/spamassassin/10_osf_rules.cf -%]
+# [% genconf_note %]
+
+
+#
+# custom spam filter rules
+#
+
+[%- FOREACH rule = spamrules -%]
+[%- tmplist = [] -%]
+[%- IF rule.from -%]
+header __OPEN_SECURITY_FILTER_TEST[% loop.count %]_FROM     From =~ /[% rule.from FILTER replace('/', '\/') %]/
+[% tmplist.push("__OPEN_SECURITY_FILTER_TEST${loop.count}_FROM") -%]
+[%- END -%]
+[%- IF rule.to -%]
+header __OPEN_SECURITY_FILTER_TEST[% loop.count %]_TO       To =~ /[% rule.to FILTER replace('/', '\/') %]/
+[% tmplist.push("__OPEN_SECURITY_FILTER_TEST${loop.count}_TO") -%]
+[%- END -%]
+[%- IF rule.subject -%]
+header __OPEN_SECURITY_FILTER_TEST[% loop.count %]_SUBJECT  Subject =~ /[% rule.subject FILTER replace('/', '\/') %]/
+[% tmplist.push("__OPEN_SECURITY_FILTER_TEST${loop.count}_SUBJECT") -%]
+[%- END -%]
+[% IF rule.body -%]
+body __OPEN_SECURITY_FILTER_TEST[% loop.count %]            /[% rule.body FILTER replace('/', '\/') %]/
+[% tmplist.push("__OPEN_SECURITY_FILTER_TEST${loop.count}_BODY") -%]
+[%- END -%]
+
+meta  OPEN_SECURITY_FILTER_TEST[% loop.count %] ([% tmplist.join(' && ') %])
+score OPEN_SECURITY_FILTER_TEST[% loop.count %] [% rule.score %]
+
+
+[%- END -%]
+
+
+#
+# DNS black list configuration
+#
+
+[%- IF remotetests -%]
+skip_rbl_checks         0
+[% ELSE -%]
+skip_rbl_checks         1
+[% END %]
+
+[% FOREACH key = dnsblacklists.keys.sort -%]
+[%- IF ! dnsblacklists.$key.enabled -%]
+score RCVD_IN_[% key FILTER upper %] 0
+[% ELSIF dnsblacklists.$key.score -%]
+score RCVD_IN_[% key FILTER upper %] [% dnsblacklists.$key.score %]
+[% END -%]
+[%- END -%]
+
+
+score RCVD_IN_SORBS_BLOCK 0
+score RCVD_IN_SORBS_DUL 0
+score RCVD_IN_SORBS_HTTP 0
+score RCVD_IN_SORBS_MISC 0
+score RCVD_IN_SORBS_SMTP 0
+score RCVD_IN_SORBS_SOCKS 0
+score RCVD_IN_SORBS_WEB 0
+score RCVD_IN_SORBS_ZOMBIE 0

@@ -1,0 +1,17 @@
+osf-utils (20041207) unstable; urgency=low
+
+  * Polish build system and control files
+
+ -- Peter Eisentraut <peter.eisentraut@credativ.de>  Tue,  7 Dec 2004 10:53:55 +0100
+
+osf-utils (20041130) unstable; urgency=low
+
+  * Ignore failures from force-reload
+
+ -- Peter Eisentraut <peter.eisentraut@credativ.de>  Tue, 30 Nov 2004 11:38:04 +0100
+
+osf-utils (20041008) unstable; urgency=low
+
+  * Initial release
+
+ -- Peter Eisentraut <peter.eisentraut@credativ.de>  Fri,  8 Oct 2004 16:46:57 +0200

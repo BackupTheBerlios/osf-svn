@@ -1,0 +1,80 @@
+#! /bin/bash
+
+set -e
+
+me=$(basename $0)
+
+package=$1
+if [ -z "$package" ]; then
+    echo "$me: must specify package name as argument" 1>&2
+    exit 1
+fi
+
+TMPFILE=`mktemp` || exit 1
+
+hostname=$(hostname --fqdn)
+email="admin@$hostname"
+
+cat <<_EOF_ >$TMPFILE
+RANDFILE                = \$ENV::HOME/.rnd
+
+[ req ]
+default_bits            = 1024
+default_keyfile         = privkey.pem
+distinguished_name      = req_distinguished_name
+prompt                  = no
+
+[ req_distinguished_name ]
+countryName             = DE
+stateOrProvinceName     = NRW
+localityName            = Juelich
+organizationName        = credativ GmbH
+organizationalUnitName  = Open Security Filter
+commonName              = $hostname
+emailAddress            = $email
+_EOF_
+
+export RANDFILE=/dev/random
+
+
+function reload() {
+	if [ -x /usr/sbin/invoke-rc.d ]; then
+		invoke-rc.d "$1" force-reload || :
+	elif [ -x /etc/init.d/"$1" ]; then
+		/etc/init.d/"$1" force-reload || :
+	fi
+}
+
+
+#
+# Apache
+#
+if [ "$package" = apache ]; then
+	openssl req -config $TMPFILE -new -x509 -nodes -days 365 \
+	    -out /etc/apache-ssl/apache.pem -keyout /etc/apache-ssl/apache.pem
+
+	cd /etc/apache-ssl
+	ln -s -f apache.pem `openssl x509 -hash -noout -in apache.pem`
+	chmod 600 /etc/apache-ssl/apache.pem
+
+	reload apache-ssl
+fi
+
+
+#
+# Postfix
+#
+if [ "$package" = postfix ]; then
+	openssl req -config $TMPFILE -new -x509 -nodes -days 365 \
+	    -out /etc/postfix/cert.pem -keyout /etc/postfix/key.pem
+
+	chmod 600 /etc/postfix/cert.pem
+	chmod 600 /etc/postfix/key.pem
+
+	reload postfix
+fi
+
+
+rm -f $TMPFILE
+
+exit 0

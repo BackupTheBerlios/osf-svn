@@ -1,0 +1,8 @@
+[%# /etc/fetchmailrc -%]
+# [% genconf_note %]
+
+set daemon [% fetchmail_interval %]
+
+[% FOREACH rule = fetchmailrules -%]
+[% IF fetchmail_enabled %]poll[% ELSE %]skip[% END %] [% rule.server %] protocol [% rule.proto %][% IF rule.ssl %] ssl[% END %] username "[% rule.remoteuser %]"[% IF rule.localuser %] is "[% rule.localuser %]"[% END %] password "[% rule.remotepw %]"
+[% END %]

@@ -1,0 +1,64 @@
+#! @PERL@
+
+BEGIN {
+    unshift @INC, '@datadir@';
+}
+
+use strict;
+no strict qw(refs);
+use warnings;
+use English;
+
+use CGI qw(:standard);
+
+use OSF::HTML;
+
+use Template;
+
+our $template = Template->new( { INCLUDE_PATH => "@datadir@/templates/htdocs:@htdocsdir@/postfix-logreport" } );
+our $topdir = "@htdocsdir@/postfix-logreport";
+
+
+sub print_index($)
+{
+    my ($cgi) = @_;
+    my $self = $cgi->url(-relative=>1);
+    my @entries;
+
+    if (opendir DIR, "$topdir") {
+	@entries = reverse sort grep(/mailreport-\d+\.txt/, readdir DIR);
+	closedir DIR;
+    }
+
+    html_top($cgi);
+    $template->process('postfix_logreport_index', { entries => \@entries,
+						    self => $self });
+    html_bottom();
+}
+
+
+sub print_file($$)
+{
+    my ($cgi, $file) = @_;
+    my $self = $cgi->url(-relative=>1);
+
+    html_top($cgi);
+    $template->process('postfix_logreport_file', { self => $self,
+						   file => $file });
+    html_bottom();
+}
+
+
+#
+# Main program
+#
+
+my $cgi = new CGI();
+
+if ($cgi->param('file')) {
+    print_file($cgi, $cgi->param('file'));
+} else {
+    print_index($cgi);
+}
+
+exit 0;

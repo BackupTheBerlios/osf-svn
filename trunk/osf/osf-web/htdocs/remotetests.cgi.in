@@ -1,0 +1,155 @@
+#! @PERL@
+
+BEGIN {
+    unshift @INC, '@datadir@';
+}
+
+use strict;
+no strict qw(refs);
+use warnings;
+use English;
+
+use CGI qw(:standard);
+
+use OSF::HTML;
+use OSF::Config;
+use OSF::Validate;
+
+use Template;
+
+my $template = Template->new( { INCLUDE_PATH => "@datadir@/templates/htdocs" } );
+
+
+our %dnsblacklists =
+  (
+   'bl_spamcop_net' => {
+		  'name' => 'SpamCop',
+		  'longname' => 'SpamCop Blocking List',
+		  'infourl' => 'http://www.spamcop.net/bl.shtml',
+		 },
+   'dsbl' => {
+	      'name' => 'DSBL',
+	      'longname' => 'Distributed Server Boycott List',
+	      'infourl' => 'http://www.dsbl.org/',
+	     },
+   'njabl_cgi' => {
+		   'name' => 'NJABL CGI',
+		   'longname' => 'NJABL open formmails',
+		   'infourl' => 'http://www.njabl.org/',
+		  },
+   'njabl_dul' => {
+		   'name' => 'NJABL DUL',
+		   'longname' => 'NJABL dial-up blocks',
+		   'infourl' => 'http://www.njabl.org/',
+		  },
+   'njabl_multi' => {
+		   'name' => 'NJABL Multi',
+		   'longname' => 'NJABL multistage open relays',
+		   'infourl' => 'http://www.njabl.org/',
+		  },
+   'njabl_proxy' => {
+		   'name' => 'NJABL Proxy',
+		   'longname' => 'NJABL open proxies',
+		   'infourl' => 'http://www.njabl.org/',
+		  },
+   'njabl_relay' => {
+		   'name' => 'NJABL Relay',
+		   'longname' => 'NJABL confirmed open relays',
+		   'infourl' => 'http://www.njabl.org/',
+		  },
+   'njabl_spam' => {
+		   'name' => 'NJABL Spam',
+		   'longname' => 'NJABL confirmed spam source',
+		   'infourl' => 'http://www.njabl.org/',
+		  },
+   'rfci' => {
+	      'name' => 'RFC Ignorant',
+	      'longname' => 'RFC Ignorant',
+	      'infourl' => 'http://rfc-ignorant.org/',
+	     },
+   'sbl' => {
+	     'name' => 'Spamhaus SBL',
+	     'longname' => 'Spamhaus Block List',
+	     'infourl' => 'http://www.spamhaus.org/sbl/',
+	    },
+   'xbl' => {
+	     'name' => 'Spamhaus XBL',
+	     'longname' => 'Spamhaus Exploit Block List',
+	     'infourl' => 'http://www.spamhaus.org/xbl/',
+	    },
+  );
+
+
+sub print_config_form($)
+{
+    my ($cgi) = @_;
+
+    html_top($cgi);
+
+    my %config = read_config_file();
+
+    $template->process('remotetests',
+		       {
+			config => \%config,
+			lists => \%dnsblacklists
+		       })
+      || die $template->error();
+
+    html_bottom();
+}
+
+
+sub form_to_config($%)
+{
+    my ($cgi, %config) = @_;
+
+    $config{remotetests} = $cgi->param('remotetests');
+
+    foreach my $key (keys %dnsblacklists) {
+	my $enabled = $cgi->param("${key}_enabled");
+	my $score = $cgi->param("${key}_score");
+
+	if ($score ne '' && !is_valid_sa_score($score)) {
+	    $template->process('common_formerror', { 'field' => $dnsblacklists{$key}->{name}, 'value' => $score });
+	    return ();
+	}
+
+	$config{dnsblacklists}->{$key}->{enabled} = $enabled;
+	$config{dnsblacklists}->{$key}->{score} = $score;
+    }
+
+    return %config;
+}
+
+
+sub do_submit($)
+{
+    my ($cgi) = @_;
+    my %config;
+
+    html_top($cgi);
+
+    %config = read_config_file();
+    %config = form_to_config($cgi, %config) or return;
+    eval {
+	write_config_file(%config);
+    };
+    $template->process('common_submitresponse', { error => $@ });
+
+    html_bottom();
+}
+
+
+#
+# Main program
+#
+
+my $cgi = new CGI();
+
+if ($cgi->param("submit")) {
+    do_submit($cgi);
+} else {
+    print_config_form($cgi);
+}
+
+exit 0;

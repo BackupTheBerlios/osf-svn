@@ -1,0 +1,166 @@
+#! /bin/bash
+
+set -e
+
+action=$1
+lastversion=$2
+
+confdir=/usr/share/osf-base/base-conf
+
+
+function configure_issue() {
+	if [ -z "$lastversion" ]; then
+		mv /etc/issue /etc/issue.orig
+		mv /etc/issue.net /etc/issue.net.orig
+	fi
+
+	cp $confdir/issue.osf /etc/issue
+	cp $confdir/issue.net.osf /etc/issue.net
+}
+
+
+function configure_logrotate() {
+	if [ -z "$lastversion" ]; then
+		mv /etc/logrotate.d/syslog-ng /etc/logrotate.d/syslog-ng.orig
+	fi
+
+	cp $confdir/logrotate.syslog-ng /etc/logrotate.d/syslog-ng
+}
+
+
+function configure_postfix() {
+	if [ -z "$lastversion" ]; then
+		mv /etc/postfix/master.cf /etc/postfix/master.cf.orig
+	fi
+	cp $confdir/postfix-master.cf /etc/postfix/master.cf
+
+	if [ ! -e /etc/postfix/cert.pem ] || [ ! -e /etc/postfix/key.pem ]; then
+		osf-make-ssl-cert postfix
+	fi
+
+	invoke-rc.d postfix force-reload
+}
+
+
+function configure_resolv() {
+	if [ -z "$lastversion" ]; then
+		mv /etc/resolv.conf /etc/resolv.conf.orig
+	fi
+
+	echo "nameserver 127.0.0.1" >/etc/resolv.conf
+}
+
+
+function configure_inittab() {
+	local line="S0:12345:respawn:/sbin/getty -L 57600 ttyS0 vt102"
+
+	if ! grep -F -q "$line" /etc/inittab; then
+		echo "$line" >>/etc/inittab
+	fi
+}
+
+
+function configure_inetd() {
+	update-inetd --disable discard,daytime,time,ident
+	invoke-rc.d inetd force-reload
+}
+
+
+function configure_ipv6() {
+	perl -pi -e 's/^(alias net-pf-10.*)$/#$1/g' /etc/modprobe.d/aliases
+}
+
+
+function configure_courier() {
+	cp /etc/courier/authdaemonrc /etc/courier/authdaemonrc.orig
+	cp /etc/courier/imapd /etc/courier/imapd.orig
+	perl -pi -e '/^authmodulelist=/ and $_ = "authmodulelist=\"authpam\"\n"' /etc/courier/authdaemonrc
+	perl -pi -e '/^ADDRESS=/ and $_ = "ADDRESS=127.0.0.1\n"' /etc/courier/imapd
+	perl -pi -e '/^IMAP_CAPABILITY=/ and $_ = "IMAP_CAPABILITY=\"IMAP4rev1 UIDPLUS CHILDREN NAMESPACE THREAD=ORDEREDSUBJECT THREAD=REFERENCES SORT QUOTA AUTH=CRAM-MD5 IDLE\"\n"' /etc/courier/imapd
+	invoke-rc.d courier-authdaemon force-reload
+	invoke-rc.d courier-imap force-reload
+}
+
+
+function configure_pullconfig() {
+	perl -pi -e '/^MASTER=/ and $_ = "MASTER=\"root\@localhost:/var/lib/osf/genconf/\"\n"' \
+	  /etc/osf-pull-config/pull-config.conf
+
+	(
+		uname 077
+		ssh-keyscan -t rsa localhost >> /etc/ssh/ssh_known_hosts
+		ssh-keygen -t dsa -q -f /root/.ssh/id_dsa -N ''
+		cat /root/.ssh/id_dsa.pub >> /root/.ssh/authorized_keys
+	)
+}
+
+
+function configure_muninnode() {
+	perl -pi -e '/^host / and $_ = "host localhost\n"' /etc/munin/munin-node.conf
+	invoke-rc.d munin-node force-reload
+}
+
+
+function configure_amavis() {
+	cp $confdir/amavisd-static.conf /etc/amavis/
+}
+
+
+function configure_spamassassin() {
+	if [ -z "$lastversion" ]; then
+		mv /etc/spamassassin/init.pre /etc/spamassassin/init.pre.orig
+		mv /etc/spamassassin/local.cf /etc/spamassassin/local.cf.orig
+	fi
+	cp $confdir/spamassassin_init.pre /etc/spamassassin/init.pre
+	cp $confdir/spamassassin_local.cf /etc/spamassassin/local.cf
+}
+
+
+function configure_firehol() {
+	if [ -z "$lastversion" ]; then
+		mv /etc/default/firehol /etc/default/firehol.orig
+		mv /etc/firehol/firehol.conf /etc/firehol/firehol.conf.orig
+	fi
+
+	echo "START_FIREHOL=YES" >/etc/default/firehol
+
+	local nics=$(cat /proc/net/dev | grep -E ' *eth.:' | wc -l)
+	if [ $nics -eq 1 ]; then
+		cp $confdir/firehol.conf-1nic /etc/firehol/firehol.conf
+	elif [ $nics -ge 2]; then
+		cp $confdir/firehol.conf-2nic /etc/firehol/firehol.conf
+	fi
+
+	invoke-rc.d firehol force-reload
+}
+
+
+if [ "$action" = configure ]; then
+	configure_issue
+	configure_logrotate
+	configure_postfix
+#	configure_resolv
+	configure_inittab
+	configure_inetd
+#	configure_ipv6
+	configure_courier
+	configure_pullconfig
+	configure_muninnode
+	configure_amavis
+	configure_spamassassin
+#	configure_firehol
+
+	getent passwd admin >/dev/null 2>&1 || adduser --gecos "Open Security Filter administrator" admin
+	su -c 'test -d Maildir || maildirmake Maildir' - admin
+
+	if [ ! -d /var/lib/osf/genconf ]; then
+		osf-genconf --infile /usr/share/osf-base/default-config.pl \
+	                    --outdir /var/lib/osf/genconf
+		# XXX weird...
+		invoke-rc.d postfix start
+	fi
+fi
+
+#DEBHELPER#
+
+exit 0

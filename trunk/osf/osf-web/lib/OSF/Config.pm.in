@@ -1,0 +1,72 @@
+# -*-perl-*-
+package OSF::Config;
+
+use strict;
+use warnings;
+
+use Exporter;
+use vars qw(@ISA @EXPORT);
+@ISA = qw(Exporter);
+
+@EXPORT = qw(
+	     serialize_config
+	     unserialize_config
+	     read_config_file
+	     write_config_file
+	    );
+
+use Data::Dumper;
+
+
+my $filename = "@sysconfdir@/www-data/config.pl";
+
+
+sub serialize_config(%) {
+    my %config = @_;
+
+    local $Data::Dumper::Indent = 1;
+    local $Data::Dumper::Purity = 1;
+    local $Data::Dumper::Sortkeys = 1;
+
+    return (Data::Dumper->Dump([\%config], ['config']));
+}
+
+
+sub unserialize_config($) {
+    my ($content) = @_;
+
+    my $config;
+
+    # FIXME: security hole?
+    eval $content;
+    return %{$config};
+}
+
+
+sub read_config_file(;$) {
+    my ($otherfile) = @_;
+    my $f = $filename;
+    if (defined($otherfile)) {
+	$f = $otherfile;
+    }
+
+    our $config = { };
+
+    if (-e $f) {
+	do $f;
+    }
+    return %{$config};
+}
+
+
+sub write_config_file(%) {
+    my %config = @_;
+
+    open(FILE, ">$filename.$$") or die "$!";
+    print FILE (serialize_config(%config));
+    close(FILE);
+    rename("$filename.$$", "$filename") or die "$!";
+
+    system('osf-genconf', '--infile', $filename, '--outdir', '/var/lib/osf/genconf');
+    ($? == 0) or die "osf-genconf failed";
+}

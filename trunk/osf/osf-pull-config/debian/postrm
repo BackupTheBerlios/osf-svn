@@ -1,0 +1,13 @@
+#!/bin/sh
+
+set -e
+
+if [ "$1" = purge ]; then
+	rm -rf /etc/osf-pull-config
+	rm -rf /var/lib/osf-pull-config
+	rm -rf /var/lock/osf-pull-config
+fi
+
+#DEBHELPER#
+
+exit 0

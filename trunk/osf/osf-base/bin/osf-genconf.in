@@ -1,0 +1,57 @@
+#! @PERL@
+
+use strict;
+no strict 'refs';
+use warnings;
+
+use File::Basename;
+use Getopt::Long;
+use Template;
+use Sys::Hostname;
+
+
+my $templatedir = '@templatedir@';
+my $infile = '';
+my $outdir = '';
+my $debug = 0;
+
+GetOptions("infile=s" => \$infile,
+	   "outdir=s" => \$outdir,
+	   "templatedir=s" => \$templatedir,
+	   "debug" => \$debug,
+	  );
+
+if ($infile eq '') {
+    die "$0: no infile specified\n";
+}
+
+if ($outdir eq '') {
+    die "$0: no outdir specified\n";
+}
+
+my $tt = Template->new(INCLUDE_PATH => "$templatedir") or die "$0: $Template::ERROR\n";
+
+my $host = hostname;
+
+our $config;
+do "$infile";
+
+foreach my $tmpl (glob("$templatedir/*.tt2")) {
+    my $firstline;
+    my $filename;
+
+    open(FILE, $tmpl) or die "$0: count not open \"$tmpl\": $!\n";
+    $firstline = <FILE>;
+    close(FILE);
+
+    $firstline =~ m!\[\%\# (\S+)! and $filename = $1;
+
+    system('mkdir', '-p', '--', "$outdir/" . dirname($filename));
+    ($? == 0) or die "$0: could not make directory \"$outdir/" . dirname($filename) . "\": $?\n";
+
+    $config->{genconf_note} = "generated automatically from $tmpl on $host by $0";
+    $tt->process(basename($tmpl), $config, "$outdir/$filename") or die "$0: " . $tt->error() . "\n";
+    print "Wrote $outdir/$filename\n" if $debug;
+}
+
+exit 0;

@@ -1,0 +1,25 @@
+[% WRAPPER common_htmlpage title="Logauswertung des E-Mail-Systems" %]
+
+<h2>Tägliche Auswertung</h2>
+<p align="center">
+[% FOREACH item = entries %]
+[%- matches = item.match('mailreport-(\d{4})(\d{2})(\d{2}).txt') %]
+  <a href="[% self FILTER uri %]?file=[% item FILTER uri %]">[% matches.2 %].[% matches.1 %].[% matches.0 %]</a><br />
+[% END %]
+</p>
+
+<p>
+<em>Hinweis: Das Datum bezieht sich auf die Erstellung der Logauswertung.
+Die Auswertung betrachtet dabei in der Regel hauptsächlich den E-Mail-Verkehr vom Vortag.</em>
+</p>
+
+<h2>Wöchentliche Auswertung</h2>
+<p align="center">
+  <a href="[% self FILTER uri %]?file=mailreport-weekly.txt">Letzte Woche</a><br />
+</p>
+
+<p>
+  <a href='./'>Zurück zur Hauptseite</a>
+</p>
+
+[% END %]

@@ -1,0 +1,32 @@
+osf-base (20041207) unstable; urgency=low
+
+  * Converted to CDBS
+
+ -- Peter Eisentraut <peter.eisentraut@credativ.de>  Tue,  7 Dec 2004 10:53:55 +0100
+
+osf-base (20041203) unstable; urgency=low
+
+  * Added preconfiguration of localhost ssh access
+
+ -- Peter Eisentraut <peter.eisentraut@credativ.de>  Fri,  3 Dec 2004 10:20:13 +0100
+
+osf-base (20041126) unstable; urgency=low
+
+  * Added configuration of spamassassin 3
+  * Removed configuration of nameserver (must be done by installer)
+  * Disabled kernel 2.6, firehol for now
+  * Added missing dependencies
+
+ -- Peter Eisentraut <peter.eisentraut@credativ.de>  Fri, 26 Nov 2004 13:22:29 +0100
+
+osf-base (20041116) unstable; urgency=low
+
+  * Added fetchmailrc
+
+ -- Peter Eisentraut <peter.eisentraut@credativ.de>  Tue, 16 Nov 2004 14:56:03 +0100
+
+osf-base (20041008) unstable; urgency=low
+
+  * Initial release
+
+ -- Peter Eisentraut <peter.eisentraut@credativ.de>  Fri,  8 Oct 2004 16:46:57 +0200
