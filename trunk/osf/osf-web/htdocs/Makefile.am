@@ -2,7 +2,7 @@ SUBDIRS = templates
 
 htdocsdir = $(pkgdatadir)/htdocs
 dist_htdocs_DATA = \
-	stylesheet.css credativ.gif
+	stylesheet.css
 
 dist_pkgdata_DATA = \
 	index.html
