@@ -17,7 +17,7 @@ $org_title     = "Open Security Filter";
 $signout_page  = '/osf/';
 $frame_top     = '_top';
 
-//$provider_uri     = 'http://www.credativ.de/';
+$provider_uri     = 'http://osf.berlios.de/';
 
 //$provider_name     = 'credativ GmbH';
 
