@@ -27,7 +27,6 @@
   <xsl:param name="generate.id.attributes" select="1"></xsl:param>
   <xsl:param name="generate.legalnotice.link" select="1"></xsl:param>
   <xsl:param name="refentry.xref.manvolnum" select="0"/>
-  <xsl:param name="link.mailto.url">osf-devel@lists.berlios.de</xsl:param>
   <xsl:param name="formal.procedures" select="0"></xsl:param>
   <xsl:param name="punct.honorific" select="''"></xsl:param>
   <xsl:param name="chunker.output.indent" select="'yes'"/>

@@ -1,6 +1,6 @@
 AC_PREREQ(2.59)
 
-AC_INIT([osf-web], esyscmd([echo -n `date '+%Y%m%d'`]), [osf-devel@lists.berlios.de])
+AC_INIT([osf-web], esyscmd([echo -n `date '+%Y%m%d'`]), [http://osf.berlios.de/])
 AC_CONFIG_AUX_DIR([config])
 AM_INIT_AUTOMAKE
 
