@@ -41,7 +41,7 @@ destination console { usertty("root"); };
 
 # Virtual console.
 #
-destination console_all { file("/dev/tty8"); };
+#destination console_all { file("/dev/tty8"); };
 
 # The named pipe /dev/xconsole is for the nsole' utility.  To use it,
 # you must invoke nsole' with the -file' option:
