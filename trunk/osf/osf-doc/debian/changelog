@@ -1,3 +1,9 @@
+osf-doc (20050218) unstable; urgency=low
+
+  * New release
+  
+ -- Peter Eisentraut <peter.eisentraut@credativ.de>  Fri, 18 Feb 2005 13:44:00 +0100
+
 osf-doc (20041207) unstable; urgency=low
 
   * Repaired build rules and dependencies

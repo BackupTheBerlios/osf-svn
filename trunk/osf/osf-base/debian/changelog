@@ -1,3 +1,9 @@
+osf-base (20050218) unstable; urgency=low
+
+  * Bug fix release
+  
+ -- Peter Eisentraut <peter.eisentraut@credativ.de>  Fri, 18 Feb 2005 13:44:00 +0100
+
 osf-base (20050217) unstable; urgency=low
 
   * Only create SSH key for root if there isn't one already
