@@ -27,7 +27,7 @@ sub is_valid_email_address($)
     # FIXME: see <http://www.faqs.org/rfcs/rfc2822.html> section 3.4
     # for correct solution
 
-    return ($value =~ m!^[A-Z0-9._%-]+@[A-Z0-9._%-]+\.[A-Z]{2,4}$!i);
+    return ($value =~ m!^[A-Z0-9._%-]+@[A-Z0-9._]+$!i);
 }
 
 
