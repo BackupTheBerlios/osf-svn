@@ -89,7 +89,7 @@ function configure_pullconfig() {
 	(
 		uname 077
 		ssh-keyscan -t rsa localhost >> /etc/ssh/ssh_known_hosts
-		ssh-keygen -t dsa -q -f /root/.ssh/id_dsa -N ''
+		test -f /root/.ssh/id_dsa || ssh-keygen -t dsa -q -f /root/.ssh/id_dsa -N ''
 		cat /root/.ssh/id_dsa.pub >> /root/.ssh/authorized_keys
 	)
 }

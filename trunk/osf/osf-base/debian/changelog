@@ -1,3 +1,9 @@
+osf-base (20050217) unstable; urgency=low
+
+  * Only create SSH key for root if there isn't one already
+
+ -- Peter Eisentraut <peter.eisentraut@credativ.de>  Thu, 17 Feb 2005 11:27:22 +0100
+
 osf-base (20041207) unstable; urgency=low
 
   * Converted to CDBS
