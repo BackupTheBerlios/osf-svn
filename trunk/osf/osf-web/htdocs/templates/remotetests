@@ -18,9 +18,9 @@
 </div>
 
 <div class="box">
-  <h3>DNS-Blacklists</h3>
+  <h3>DNS-Blackhole-Listen</h3>
   <p>
-   Hier können Sie die DNS-Blacklisten aktiveren und ihnen eine
+   Hier können Sie die DNS-Blackhole-Listen aktiveren und ihnen eine
    Punktzahl zuweisen.  Wenn Sie keine Punktzahl angeben, werden
    vorgegebene Punktzahlen verwendet.
   </p>

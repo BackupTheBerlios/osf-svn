@@ -29,7 +29,7 @@ our %dnsblacklists =
 		 },
    'dsbl' => {
 	      'name' => 'DSBL',
-	      'longname' => 'Distributed Server Boycott List',
+	      'longname' => 'Distributed Sender Blackhole List',
 	      'infourl' => 'http://www.dsbl.org/',
 	     },
    'njabl_cgi' => {
