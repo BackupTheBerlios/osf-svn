@@ -1,3 +1,9 @@
+osf-base (20050712) unstable; urgency=low
+
+  * Add user clamav to group amavis
+
+ -- Steffen Joeris <steffen.joeris@credativ.de>  Tue, 12 Jul 2005 11:47:38 +0200
+
 osf-base (20050218) unstable; urgency=low
 
   * Bug fix release

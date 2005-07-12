@@ -90,6 +90,9 @@ function remove_firehol() {
 	fi
 }
 
+function remove_clamav() {
+	deluser clamav amavis
+}
 
 
 if [ "$action" = remove ]; then
@@ -102,6 +105,7 @@ if [ "$action" = remove ]; then
 	remove_pullconfig
 	remove_spamassassin
 #	remove_firehol
+	remove_clamav
 fi
 
 if [ "$action" = purge ]; then

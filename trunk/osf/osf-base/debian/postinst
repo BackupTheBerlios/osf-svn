@@ -134,6 +134,9 @@ function configure_firehol() {
 	invoke-rc.d firehol force-reload
 }
 
+function configure_clamav() {
+	addgroup clamav amavis
+}
 
 if [ "$action" = configure ]; then
 	configure_issue
@@ -149,6 +152,7 @@ if [ "$action" = configure ]; then
 	configure_amavis
 	configure_spamassassin
 #	configure_firehol
+	configure_clamav
 
 	getent passwd admin >/dev/null 2>&1 || adduser --gecos "Open Security Filter administrator" admin
 	su -c 'test -d Maildir || maildirmake Maildir' - admin
