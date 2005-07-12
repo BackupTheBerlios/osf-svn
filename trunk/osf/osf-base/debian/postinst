@@ -21,7 +21,7 @@ function configure_issue() {
 
 function configure_logrotate() {
 	if [ -z "$lastversion" ]; then
-		mv /etc/logrotate.d/syslog-ng /etc/logrotate.d/syslog-ng.orig
+		mv /etc/logrotate.d/syslog-ng /etc/logrotate.d/syslog-ng.orig.disabled
 	fi
 
 	cp $confdir/logrotate.syslog-ng /etc/logrotate.d/syslog-ng

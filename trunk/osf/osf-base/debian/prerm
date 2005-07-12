@@ -17,7 +17,7 @@ function remove_issue() {
 
 function remove_logrotate() {
 	if [ -f /etc/logrotate.d/syslog-ng.orig ]; then
-		mv /etc/logrotate.d/syslog-ng.orig /etc/logrotate.d/syslog-ng
+		mv /etc/logrotate.d/syslog-ng.orig.disabled /etc/logrotate.d/syslog-ng
 	fi
 }
 
