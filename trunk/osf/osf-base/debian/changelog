@@ -1,3 +1,9 @@
+osf-base (20050714) unstable; urgency=low
+
+  * Rename old logrotate files to .orig.disabled so logrotate ignores them
+
+ -- Peter Eisentraut <peter.eisentraut@credativ.de>  Thu, 14 Jul 2005 15:21:35 +0200
+
 osf-base (20050712) unstable; urgency=low
 
   * Add user clamav to group amavis
