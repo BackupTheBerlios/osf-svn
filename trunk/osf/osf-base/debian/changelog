@@ -1,3 +1,9 @@
+osf-base (20050729) unstable; urgency=low
+
+  * Make fetchmailrc.tt2 always produce a valid configuration file
+
+ -- Peter Eisentraut <peter.eisentraut@credativ.de>  Fri, 29 Jul 2005 10:55:45 +0200
+
 osf-base (20050714) unstable; urgency=low
 
   * Rename old logrotate files to .orig.disabled so logrotate ignores them
