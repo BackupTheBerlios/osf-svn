@@ -2,7 +2,7 @@ Source: osf-base
 Section: misc
 Priority: optional
 Maintainer: Peter Eisentraut <peter.eisentraut@credativ.de>
-Build-Depends-Indep: debhelper (>= 4.1.0), cdbs (>= 0.4.0)
+Build-Depends-Indep: debhelper (>= 4.1.16), cdbs (>= 0.4.0)
 Standards-Version: 3.6.1.1
 
 Package: osf-base

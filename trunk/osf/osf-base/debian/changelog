@@ -1,3 +1,9 @@
+osf-base (20050902) unstable; urgency=low
+
+  * Added debconf handling to get password for user "admin"
+
+ -- Steffen Joeris <steffen.joeris@credativ.de>  Fri,  2 Sep 2005 13:55:00 +0200
+
 osf-base (20050729) unstable; urgency=low
 
   * Make fetchmailrc.tt2 always produce a valid configuration file
