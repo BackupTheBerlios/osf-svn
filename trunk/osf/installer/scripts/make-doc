@@ -1,0 +1,15 @@
+#! /bin/bash -e
+
+docpackage=$(find image/pool -name osf-doc_*.deb | sed 1q)
+
+mkdir doc-tmp
+ar p $docpackage data.tar.gz | tar -C doc-tmp -x -z
+
+mkdir image/doc
+
+mv doc-tmp/usr/share/doc/osf-doc/html-de/ image/doc/
+mv doc-tmp/usr/share/doc/osf-doc/doc.de.txt.gz image/doc/
+mv doc-tmp/usr/share/doc/osf-doc/doc.de.pdf.gz image/doc/
+gunzip image/doc/*.gz
+
+rm -rf doc-tmp

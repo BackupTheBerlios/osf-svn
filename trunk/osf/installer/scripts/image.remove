@@ -1,0 +1,9 @@
+doc/
+pics/
+README.html
+README.txt
+README.mirrors.html
+README.mirrors.txt
+md5sum.txt
+pool/
+isolinux/splash.rle

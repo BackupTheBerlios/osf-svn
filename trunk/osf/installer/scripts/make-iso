@@ -1,0 +1,5 @@
+#! /bin/sh -e
+
+name=${1:-image.iso}
+
+mkisofs -quiet -o $name -r -b isolinux/isolinux.bin -c isolinux/boot.cat -no-emul-boot -boot-load-size 4 -boot-info-table image/

@@ -1,0 +1,6 @@
+#! /bin/bash -e
+
+rm -rf image/pool
+
+./scripts/copy-pool debian-netinst/pool image/pool
+./scripts/copy-pool extra-pool image/pool

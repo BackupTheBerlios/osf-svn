@@ -1,0 +1,14 @@
+#! /bin/bash -e
+
+if [ $# -lt 2 ]; then
+	echo "usage: $0 sourcedir targetdir" 1>&2
+	exit 1
+fi
+
+source=$1
+target=$2
+
+for x in $(cd $source && find . -name '*.deb' -o -name '*.udeb'); do
+	mkdir -p $target/$(dirname $x)
+	cp $source/$x $target/$x
+done

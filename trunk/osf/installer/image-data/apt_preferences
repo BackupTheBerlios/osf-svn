@@ -1,0 +1,3 @@
+Package: logrotate
+Pin: release l=OSF
+Pin-Priority: 999

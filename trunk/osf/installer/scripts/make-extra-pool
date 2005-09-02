@@ -1,0 +1,21 @@
+#! /bin/bash -e
+
+./scripts/get-packages image-data/get-selections.txt
+
+for x in $(find extra-packages/ -name '*.deb'); do
+	# Remove packages from main pool with same name
+	bname=$(basename $x)
+	pkgname=$(echo $bname | sed 's/_.*$//')
+	rm -f pkg-tmp/${pkgname}_*.deb
+	
+	cp $x pkg-tmp/
+done
+
+cd pkg-tmp
+../scripts/fix-deb-name *.deb
+../scripts/make-pool *.deb
+cd ..
+
+mkdir extra-pool
+mv pkg-tmp/pool extra-pool/main
+rm -rf pkg-tmp

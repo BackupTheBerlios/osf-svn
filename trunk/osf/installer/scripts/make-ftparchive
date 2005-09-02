@@ -1,0 +1,11 @@
+#! /bin/bash -e
+
+cd image
+
+apt-ftparchive -c ../scripts/apt.conf generate ../scripts/apt-ftparchive.conf
+
+rm dists/sarge/Release
+apt-ftparchive -c ../scripts/apt.conf release dists/sarge > dists/sarge/Release.new
+mv dists/sarge/Release.new dists/sarge/Release
+
+find -type f | xargs md5sum > md5sum.txt

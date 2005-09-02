@@ -1,0 +1,19 @@
+#! /bin/bash -e
+
+# Slash is important! Copy the directory, not the symlink.
+cp -R debian-netinst/ image
+
+for x in $(cat scripts/image.remove); do
+	rm -rf image/$x
+done
+
+for x in $(cd image-data && find . -type f); do
+	mkdir -p image/$(dirname $x)
+	cp image-data/$x image/$x
+done
+
+./scripts/strip-final-newline image/isolinux/*.txt
+
+./scripts/make-combined-pool
+./scripts/make-doc
+./scripts/make-ftparchive

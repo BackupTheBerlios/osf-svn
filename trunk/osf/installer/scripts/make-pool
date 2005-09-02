@@ -1,0 +1,24 @@
+#! /bin/bash -e
+
+function sourcepackage() {
+	local binpackage=$1
+	local answer
+	answer=$(apt-cache show "$binpackage" | grep '^Source' | sed 1q | sed 's/^Source: \([a-z0-9][a-z0-9.+-]*\).*$/\1/')
+	if [ -z "$answer" ]; then
+		answer=$binpackage	# better than nothing
+	fi
+	echo "$answer"
+}
+
+
+for file in "$@"; do
+	name=$(echo "$file" | sed 's/_.*$//')
+	src=$(sourcepackage "$name")
+	case $src in
+		lib*)	prefix=$(echo "$src" | cut -c 1-4);;
+		*)	prefix=$(echo "$src" | cut -c 1);;
+	esac
+	pooldir=pool/$prefix/$src
+	mkdir -p "$pooldir"
+	ln "$file" "$pooldir"/
+done

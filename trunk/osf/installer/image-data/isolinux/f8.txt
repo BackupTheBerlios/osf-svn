@@ -1,0 +1,23 @@
+0fGETTING HELP07                                                                  09F807
+
+If you have problems with this installation medium or the installed
+software, please visit our website at 0fhttp://osf.berlios.de/07.
+There you will find additional documentation, the bug-tracking system,
+and mailing lists to get help.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Press F1control and F then 1 for the help index, or ENTER to 
