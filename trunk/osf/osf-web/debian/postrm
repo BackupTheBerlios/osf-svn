@@ -3,7 +3,7 @@
 set -e
 
 if [ "$1" = remove ]; then
-	deluser www-data shadow
+	deluser www-data shadow || :
 
 	rm -f /etc/apache-ssl/conf.d/osf-web
 	invoke-rc.d apache-ssl force-reload || :

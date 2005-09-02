@@ -1,3 +1,9 @@
+osf-web (20050902) unstable; urgency=low
+
+  * Added debconf handling to get password for user "virus-quarantine"
+
+ -- Steffen Joeris <steffen.joeris@credativ.de>  Fri,  2 Sep 2005 14:28:13 +0200
+
 osf-web (20050220) unstable; urgency=low
 
   * Squirrelmail should send emails to port 10025 directly

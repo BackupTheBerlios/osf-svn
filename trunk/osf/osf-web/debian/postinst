@@ -1,7 +1,7 @@
 #! /bin/bash
 
 set -e
-
+. /usr/share/debconf/confmodule
 action=$1
 lastversion=$2
 
@@ -47,7 +47,6 @@ if [ "$1" = configure ]; then
 
 	adduser --quiet www-data shadow
 
-	getent passwd virus-quarantine >/dev/null 2>&1 || adduser --gecos "Virus quarantine" virus-quarantine
 	su -c 'test -d Maildir || maildirmake Maildir' - virus-quarantine
 
 	apache-modconf apache-ssl enable mod_auth_pam
@@ -61,4 +60,5 @@ fi
 
 #DEBHELPER#
 
+db_stop
 exit 0

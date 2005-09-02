@@ -15,7 +15,7 @@ function remove_squirrelmail() {
 
 
 function remove_wwwroot() {
-	if [ $(readlink /var/www/index.html) = "$confdir/index.html" ]; then
+	if [ "$(readlink /var/www/index.html)" = "$confdir/index.html" ]; then
 		rm /var/www/index.html
 	fi
 }
