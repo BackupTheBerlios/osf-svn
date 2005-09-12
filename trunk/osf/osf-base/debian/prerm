@@ -55,7 +55,7 @@ function remove_courier() {
 
         if [ -f /etc/courier/imapd.orig ]; then
                 mv /etc/courier/imapd.orig /etc/courier/imapd
-                invoke-rc.d courier-imapd force-reload
+                invoke-rc.d courier-imap force-reload
         fi
 }
 

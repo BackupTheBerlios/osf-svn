@@ -1,3 +1,12 @@
+osf-base (20050912) unstable; urgency=low
+
+  * Updated standards version
+  * Added adduser dependency
+  * Moved password prompt from postinst to config
+  * Added previously forgotten debconf template file
+
+ -- Peter Eisentraut <peter.eisentraut@credativ.de>  Mon, 12 Sep 2005 13:34:52 +0200
+
 osf-base (20050902) unstable; urgency=low
 
   * Added debconf handling to get password for user "admin"

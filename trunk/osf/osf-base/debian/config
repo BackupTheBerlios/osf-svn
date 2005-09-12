@@ -1,0 +1,84 @@
+#! /bin/bash
+
+set -e
+
+. /usr/share/debconf/confmodule
+
+
+# stolen from "passwd" package
+setpassword() {
+	SETPASSWD_PW="$2"
+	export SETPASSWD_PW
+
+	# This is very annoying. chpasswd cannot handle generating md5
+	# passwords as it is not PAM-aware. Thus, I have to work around
+	# that by crypting the password myself if md5 is used.
+#	db_get passwd/md5
+#	if [ "$RET" = true ]; then
+		USE_MD5=1
+#	else
+#		USE_MD5=''
+#	fi
+	export USE_MD5
+	perl -e '
+		sub CreateCryptSalt {
+			my $md5 = shift;
+
+			my @valid = split(//, "./0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ");
+			my ($in, $out);
+
+			my $cryptsaltlen = ($md5 ? 8 : 2);
+
+			open (F, "</dev/urandom") || die "No /dev/urandom found!";
+			foreach (1..$cryptsaltlen) {
+				read(F, $in, 1);
+				$out .= $valid[ord($in) % ($#valid + 1)];
+			}
+			close F;
+			return ($md5 ? "\$1\$$out\$" : $out);
+		}
+	
+		open(P,"| chpasswd -e");
+		print P shift().":".
+			crypt($ENV{SETPASSWD_PW}, CreateCryptSalt($ENV{USE_MD5})).
+		"\n";
+	close P;
+	' "$1"
+	SETPASSWD_PW=''
+	USE_MD5=''
+}
+
+
+while true; do
+	db_fset osf-base/admin-password seen false
+	db_fset osf-base/admin-password-again seen false
+
+	db_beginblock
+		db_input high osf-base/admin-password || :
+		db_input high osf-base/admin-password-again || :
+	db_endblock
+	db_go
+
+	db_get osf-base/admin-password
+	password1=$RET
+
+	db_get osf-base/admin-password-again
+	password2=$RET
+
+	if [ "$password1" != "$password2" ] || [ -z "$password1" ] ; then
+		db_reset osf-base/admin-password
+		db_reset osf-base/admin-password-again
+
+		db_fset passwd/password-mismatch seen false
+		db_input critical passwd/password-mismatch || :
+		db_go
+	else
+		break
+	fi
+done	
+
+db_set osf-base/admin-password ""
+db_set osf-base/admin-password-again ""
+
+getent passwd admin >/dev/null 2>&1 || adduser --disabled-password --gecos "Open Security Filter administrator" admin 
+setpassword admin "$password2"
