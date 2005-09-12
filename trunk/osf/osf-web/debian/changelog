@@ -1,3 +1,11 @@
+osf-web (20050912) unstable; urgency=low
+
+  * Updated standards version
+  * Various fixes to debconf handling
+  * Added dependency on amavis-stats
+
+ -- Peter Eisentraut <peter.eisentraut@credativ.de>  Mon, 12 Sep 2005 14:46:11 +0200
+
 osf-web (20050902) unstable; urgency=low
 
   * Added debconf handling to get password for user "virus-quarantine"

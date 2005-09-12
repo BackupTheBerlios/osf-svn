@@ -1,0 +1,11 @@
+Template: osf-web/user-password
+Type: password
+_Description: Virus quarantine password:
+ This installation creates a user account 'virus-quarantine'.  You need
+ to set a password for this user.
+
+Template: osf-web/user-password-again
+Type: password
+_Description: Re-enter password to verify:
+ Please enter the same password again to verify that you have typed it
+ correctly.

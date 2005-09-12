@@ -3,13 +3,13 @@ Section: web
 Priority: optional
 Maintainer: Peter Eisentraut <peter.eisentraut@credativ.de>
 Build-Depends-Indep: debhelper (>= 4.1.16), cdbs (>= 0.4.0)
-Standards-Version: 3.6.1.1
+Standards-Version: 3.6.2.1
 
 Package: osf-web
 Architecture: all
 Depends: apache-ssl (>= 1.3.29.0.1), php4, pflogsumm, libtemplate-perl,
  squirrelmail, libapache-mod-auth-pam, adduser (>= 3.34), courier-base,
- munin,
+ munin, amavis-stats,
  osf-utils,
  osf-base,
  osf-doc,

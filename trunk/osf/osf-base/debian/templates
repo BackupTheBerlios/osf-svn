@@ -1,7 +1,7 @@
 Template: osf-base/admin-password
 Type: password
 _Description: Administrator password:
- This installation creates a user account 'admin'.  You need to set up a
+ This installation creates a user account 'admin'.  You need to set a
  password for this user.
 
 Template: osf-base/admin-password-again
