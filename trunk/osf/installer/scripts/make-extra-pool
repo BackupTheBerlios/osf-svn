@@ -1,5 +1,7 @@
 #! /bin/bash -e
 
+rm -rf extra-pool/ pkg-tmp/
+
 ./scripts/get-packages image-data/get-selections.txt
 
 for x in $(find extra-packages/ -name '*.deb'); do
