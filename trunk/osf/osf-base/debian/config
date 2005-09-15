@@ -1,8 +1,9 @@
-#! /bin/bash
+#!/bin/sh
 
 set -e
 
 . /usr/share/debconf/confmodule
+db_capb "backup"
 
 
 # stolen from "passwd" package
@@ -49,36 +50,38 @@ setpassword() {
 }
 
 
-while true; do
-	db_fset osf-base/admin-password seen false
-	db_fset osf-base/admin-password-again seen false
+if ! getent passwd admin >/dev/null; then
+	while true; do
+		db_fset osf-base/admin-password seen false
+		db_fset osf-base/admin-password-again seen false
 
-	db_beginblock
-		db_input high osf-base/admin-password || :
-		db_input high osf-base/admin-password-again || :
-	db_endblock
-	db_go
-
-	db_get osf-base/admin-password
-	password1=$RET
-
-	db_get osf-base/admin-password-again
-	password2=$RET
-
-	if [ "$password1" != "$password2" ] || [ -z "$password1" ] ; then
-		db_reset osf-base/admin-password
-		db_reset osf-base/admin-password-again
-
-		db_fset passwd/password-mismatch seen false
-		db_input critical passwd/password-mismatch || :
+		db_beginblock
+			db_input high osf-base/admin-password || :
+			db_input high osf-base/admin-password-again || :
+		db_endblock
 		db_go
-	else
-		break
-	fi
-done	
 
-db_set osf-base/admin-password ""
-db_set osf-base/admin-password-again ""
+		db_get osf-base/admin-password
+		password1=$RET
 
-getent passwd admin >/dev/null 2>&1 || adduser --disabled-password --gecos "Open Security Filter administrator" admin 
-setpassword admin "$password2"
+		db_get osf-base/admin-password-again
+		password2=$RET
+
+		if [ "$password1" != "$password2" ] || [ -z "$password1" ] ; then
+			db_reset osf-base/admin-password
+			db_reset osf-base/admin-password-again
+
+			db_fset passwd/password-mismatch seen false
+			db_input critical passwd/password-mismatch || :
+			db_go
+		else
+			break
+		fi
+	done	
+
+	db_set osf-base/admin-password ""
+	db_set osf-base/admin-password-again ""
+
+	adduser --disabled-password --gecos "Open Security Filter administrator" admin 
+	setpassword admin "$password2"
+fi

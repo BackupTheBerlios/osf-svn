@@ -1,3 +1,9 @@
+osf-base (20050915) unstable; urgency=low
+
+  * Only ask for password once during installation
+
+ -- Peter Eisentraut <peter.eisentraut@credativ.de>  Thu, 15 Sep 2005 09:49:12 +0200
+
 osf-base (20050912) unstable; urgency=low
 
   * Updated standards version

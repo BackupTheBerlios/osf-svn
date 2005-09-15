@@ -1,8 +1,9 @@
-#! /bin/bash
+#!/bin/sh
 
 set -e
 
 . /usr/share/debconf/confmodule
+db_capb "backup"
 
 
 setpassword () {
@@ -48,36 +49,38 @@ setpassword () {
 }
 
 
-while true; do
-	db_fset osf-web/user-password seen false
-	db_fset osf-web/user-password-again seen false
+if ! getent passwd virus-quarantine >/dev/null; then
+	while true; do
+		db_fset osf-web/user-password seen false
+		db_fset osf-web/user-password-again seen false
 
-	db_beginblock
-		db_input high osf-web/user-password || :
-		db_input high osf-web/user-password-again || :
-	db_endblock
-	db_go
-
-	db_get osf-web/user-password
-	password1=$RET
-
-	db_get osf-web/user-password-again
-	password2=$RET
-
-	if [ "$password1" != "$password2" ] || [ -z "$password1" ] ; then
-		db_reset osf-web/user-password
-		db_reset osf-web/user-password-again
-
-		db_fset passwd/password-mismatch seen false
-		db_input critical passwd/password-mismatch || :
+		db_beginblock
+			db_input high osf-web/user-password || :
+			db_input high osf-web/user-password-again || :
+		db_endblock
 		db_go
-	else
-		break
-	fi
-done	
 
-db_set osf-web/user-password ""
-db_set osf-web/user-password-again ""
+		db_get osf-web/user-password
+		password1=$RET
 
-getent passwd virus-quarantine >/dev/null 2>&1 || adduser --disabled-password --gecos "Virus quarantine" virus-quarantine
-setpassword virus-quarantine "$password2"
+		db_get osf-web/user-password-again
+		password2=$RET
+
+		if [ "$password1" != "$password2" ] || [ -z "$password1" ] ; then
+			db_reset osf-web/user-password
+			db_reset osf-web/user-password-again
+
+			db_fset passwd/password-mismatch seen false
+			db_input critical passwd/password-mismatch || :
+			db_go
+		else
+			break
+		fi
+	done	
+
+	db_set osf-web/user-password ""
+	db_set osf-web/user-password-again ""
+
+	adduser --disabled-password --gecos "Virus quarantine" virus-quarantine
+	setpassword virus-quarantine "$password2"
+fi
