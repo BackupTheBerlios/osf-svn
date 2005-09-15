@@ -1,0 +1,17 @@
+osf-pull-config (20041207) unstable; urgency=low
+
+  * Fixed dependencies and build rules
+
+ -- Peter Eisentraut <peter.eisentraut@credativ.de>  Tue,  7 Dec 2004 10:53:55 +0100
+
+osf-pull-config (20041116) unstable; urgency=low
+
+  * Added fetchmail support
+
+ -- Peter Eisentraut <peter.eisentraut@credativ.de>  Tue, 16 Nov 2004 16:02:37 +0100
+
+osf-pull-config (20041008) unstable; urgency=low
+
+  * Initial release
+
+ -- Peter Eisentraut <peter.eisentraut@credativ.de>  Fri,  8 Oct 2004 16:46:57 +0200

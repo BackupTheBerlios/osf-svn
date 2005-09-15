@@ -1,0 +1,28 @@
+#! /bin/bash
+
+mirror=$(cat /etc/apt/sources.list | egrep '^deb ' | egrep -v '(security|volatile)' | sed 1q | awk '{ print $2 }')
+
+mkdir pkg-tmp
+
+packages=$(cat $1 | awk '{print $1}' | grep -v purge)
+
+cd pkg-tmp
+wget -q "$mirror/dists/sarge/main/binary-i386/Packages"
+
+for x in $packages; do
+	echo -n "$x ... "
+	filename=$(grep-dctrl -P -X "$x" -s Filename -n Packages)
+	if [ "$filename" = "" ]; then
+		echo "MISSING"
+		missing="$missing $x"
+		continue
+	fi
+	wget -q "$mirror/$filename"
+	echo "ok"
+done
+
+rm Packages
+
+if [ -n "$missing" ]; then
+	echo "MISSING: $missing" 1>&2
+fi

@@ -1,0 +1,95 @@
+[% WRAPPER common_htmlpage title="Open Security Filter Administration" %]
+
+<h2>Verwalten</h2>
+
+<div class="box">
+  <h3><a href="/squirrelmail/">E-Mail-Quarantäne-Queue verwalten</a></h3>
+  <p>
+    Öffnet einen Web-Mail-Client, in dem Sie virenverseuchte E-Mails
+    einsehen und gegebenenfalls löschen oder weiterleiten können.
+  </p>
+</div>
+
+
+<h2>Überwachen</h2>
+
+<div class="box">
+  <h3><a href="postfix-logreport.cgi">Logauswertung des E-Mail-Systems</a></h3>
+  <p>
+    Stellt die Logdateien des E-Mail-Systems als statistische
+    Zusammenfassung dar.
+  </p>
+</div>
+
+<div class="box">
+  <h3><a href="/amavis-stats/">E-Mail-Statistik</a></h3>
+  <p>
+    Stellt eine statistische Übersicht über E-Mails, Spam und Viren grafisch dar.
+  </p>
+</div>
+
+<div class="box">
+  <h3><a href="/munin/">Systemstatistik</a></h3>
+  <p>
+    Stellt eine statistische Übersicht über die Betriebssystemaktivität grafisch dar.
+  </p>
+</div>
+
+
+<h2>Konfigurieren</h2>
+
+<div class="box">
+  <h3><a href="system-config.cgi">Systemkonfiguration</a></h3>
+  <p>
+    Hier werden diverse Betriebssystemeinstellungen getätigt.
+  </p>
+</div>
+
+<div class="box">
+  <h3><a href="fetchmail-config.cgi">Fetchmail-Konfiguration</a></h3>
+  <p>
+    Hier können Sie das Programm Fetchmail konfigurieren, um Ihre
+    E-Mails aus dem Internet abholen zu lassen.
+  </p>
+</div>
+
+<div class="box">
+  <h3><a href="amavis-config.cgi">Spam- und Virenfilter konfigurieren</a></h3>
+  <p>
+    Hier können Sie diverse Einstellungen vornehmen, wie der Spam- und
+    Virenfilter E-Mails bewertet, welche Dateierweiterungen geblockt
+    werden, welche Absender erlaubt sind und mehr.
+  </p>
+</div>
+
+<div class="box">
+  <h3><a href="spamrules.cgi">Spamfilterregeln konfigurieren</a></h3>
+  <p>
+    Hier können eigene Spamfilterregeln definiert werden.
+  </p>
+</div>
+
+<div class="box">
+  <h3><a href="remotetests.cgi">Externe Spamfilterdienste konfigurieren</a></h3>
+  <p>
+    Hier können Sie externe Blacklisten einbinden.
+  </p>
+</div>
+
+<div class="box">
+  <h3><a href="config-backup.cgi">Sichern und wiederherstellen</a></h3>
+  <p>
+    Hier können Sie die Konfiguration sichern und wiederherstellen.
+  </p>
+</div>
+
+
+<h2>Dokumentation</h2>
+
+<div class="box">
+  <p>
+    <a href="doc/">Online-Dokumentation</a>
+  </p>
+</div>
+
+[% END %]

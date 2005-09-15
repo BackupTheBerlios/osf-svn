@@ -1,0 +1,15 @@
+Source: osf-pull-config
+Section: misc
+Priority: optional
+Maintainer: Peter Eisentraut <peter.eisentraut@credativ.de>
+Build-Depends-Indep: debhelper (>= 4.1.0), cdbs (>= 0.4.0)
+Standards-Version: 3.6.1.1
+
+Package: osf-pull-config
+Architecture: all
+Depends: rsync, ssh | rsh,
+ ${shlibs:Depends}, ${misc:Depends}
+Description: pull-based configuration distribution tool
+ This package provides a configuration distribution tool.  Hosts in
+ a cluster system can pull their configuration files from a central
+ repository.

@@ -1,0 +1,33 @@
+[%# /etc/amavis/amavisd.conf -%]
+# [% genconf_note %]
+
+$osf_virus_check_enabled = [% osf_virus_check_enabled %];
+$osf_spam_check_enabled = [% osf_spam_check_enabled %];
+$warnvirusrecip = [% warnvirusrecip %];
+$warnbannedrecip = [% warnbannedrecip %];
+$warn_offsite = [% warn_offsite %];
+$osf_virus_quarantine = [% osf_virus_quarantine %];
+$virus_admin = '[% virus_admin %]';
+@osf_banned_filename_exec_extensions = qw( [% FOREACH ext = osf_banned_filename_exec_extensions %][% ext %] [% END %] );
+$osf_banned_filename_double_extension = [% osf_banned_filename_double_extension %];
+@osf_banned_filename_office_extensions = qw( [% FOREACH ext = osf_banned_filename_office_extensions %][% ext %] [% END %] );
+@osf_banned_filename_web_extensions = qw( [% FOREACH ext = osf_banned_filename_web_extensions %][% ext %] [% END %] );
+@osf_banned_filename_archive_extensions = qw( [% FOREACH ext = osf_banned_filename_archive_extensions %][% ext %] [% END %] );
+$osf_banned_filename_msdownload = [% osf_banned_filename_msdownload %];
+$osf_banned_filename_rfc2046 = [% osf_banned_filename_rfc2046 %];
+@osf_banned_filename_extra_extensions = qw( [% FOREACH ext = osf_banned_filename_extra_extensions %][% ext %] [% END %] );
+$sa_tag2_level_deflt = '[% sa_tag2_level_deflt %]';
+$sa_spam_modifies_subj = [% sa_spam_modifies_subj %];
+$sa_spam_subject_tag = '[% sa_spam_subject_tag %]';
+@osf_whitelist_sender = qw([% FOREACH item = osf_whitelist_sender %]
+  [% item %]
+[% END %]);
+@osf_blacklist_sender = qw([% FOREACH item = osf_blacklist_sender %]
+  [% item %]
+[% END %]);
+@osf_relay_domains = qw([% FOREACH item = relaydomains %]
+  [% item %]
+[% END %]);
+$mydomain = '[% IF maindomain %][% maindomain %][% ELSE %]localdomain[% END %]';
+
+do '/etc/amavis/amavisd-static.conf' or die;

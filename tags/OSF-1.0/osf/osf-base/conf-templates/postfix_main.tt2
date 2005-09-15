@@ -1,0 +1,38 @@
+[%# /etc/postfix/main.cf -%]
+# [% genconf_note %]
+
+mydomain = [% IF maindomain %][% maindomain %][% ELSE %]localdomain[% END %]
+
+smtpd_banner = $myhostname ESMTP $mail_name
+biff = no
+
+append_dot_mydomain = no
+alias_maps = hash:/etc/aliases
+home_mailbox = Maildir/
+
+content_filter = [% IF mainswitch %]smtp-amavis:[127.0.0.1]:10024[% END %]
+
+[%- IF relayhost -%]
+relayhost = [[% relayhost %]]
+
+relay_domains = [% relaydomains.join(', ') %]
+[%- END %]
+
+# TLS
+tls_random_source = dev:/dev/urandom
+
+# smtpd / server
+smtpd_use_tls = yes
+smtpd_tls_key_file = /etc/postfix/key.pem
+smtpd_tls_cert_file = /etc/postfix/cert.pem
+smtpd_tls_loglevel = 1
+smtpd_tls_received_header = yes
+smtpd_tls_auth_only = yes
+smtpd_tls_session_cache_timeout = 3600s
+
+# smtp / client
+smtp_use_tls = yes
+smtp_tls_key_file = /etc/postfix/key.pem
+smtp_tls_cert_file = /etc/postfix/cert.pem
+smtp_tls_loglevel = 1
+smtp_tls_note_starttls_offer = yes

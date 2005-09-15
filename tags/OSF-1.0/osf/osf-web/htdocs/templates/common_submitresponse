@@ -1,0 +1,16 @@
+[% WRAPPER common_htmlpage title="Open Security Filter Administration" %]
+
+[%- IF errror -%]
+<p>
+  Fehler: Die Konfiguration konnte nicht geändert werden. ([% error FILTER html %])
+</p>
+[%- ELSE -%]
+<p>
+  Die Konfiguration wurde erfolgreich geändert und wird in einigen Minuten automatisch aktiv werden.
+</p>
+[%- END -%]
+<p>
+  <a href='./'>Zurück zur Hauptseite</a>[% IF self %]&nbsp;|&nbsp;<a href='[% self %]'>Weitere Einstellungen</a>[% END %]
+</p>
+
+[% END %]

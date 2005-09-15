@@ -1,0 +1,81 @@
+[% WRAPPER common_htmlpage title="Spamfilterregeln konfigurieren" %]
+
+<p>
+  Hier können Sie eigene Spamfilterregeln definieren.  Geben Sie
+  Kombinationen aus Absender, Empfänger, Betreff und Inhalt an, die gefiltert
+  werden sollen.  Lassen Sie ein oder mehrere Felder frei, um in
+  diesem Feld nicht zu suchen.  Die Angaben sind <a
+  href="http://www.perldoc.com/perl5.8.4/pod/perlre.html">Perl-kompatible
+  reguläre Ausdrücke</a>.
+</p>
+
+<form method="post" action="[% self %]">
+
+[% FOREACH rule = rules %]
+<div class="box">
+  <h3>Regel [% loop.count %]</h3>
+
+  <table border="0" cellpadding="2">
+    <tbody>
+      <tr>
+        <td>Absender:</td>
+        <td><input name="from_[% loop.count %]" type="text" size="30" value="[% rule.from FILTER html %]" /></td>
+      </tr>
+      <tr>
+        <td>Empfänger:</td>
+        <td><input name="to_[% loop.count %]" type="text" size="30" value="[% rule.to FILTER html %]" /></td>
+      </tr>
+      <tr>
+        <td>Betreff:</td>
+        <td><input name="subject_[% loop.count %]" type="text" size="50" value="[% rule.subject FILTER html %]" /></td>
+      </tr>
+      <tr>
+        <td>Inhalt:</td>
+        <td><input name="body_[% loop.count %]" type="text" size="50" value="[% rule.body FILTER html %]" /></td>
+      </tr>
+      <tr>
+        <td>Punktzahl:</td>
+        <td><input name="score_[% loop.count %]" type="text" size="5" value="[% rule.score FILTER html %]" /></td>
+      </tr>
+    </tbody>
+  </table>
+  <input type="checkbox" name="delete_[% loop.count %]" />&nbsp;Löschen
+</div>
+[% END %]
+
+<div class="box">
+  <h3>Neue Regel</h3>
+
+  <table border="0" cellpadding="2">
+    <tbody>
+      <tr>
+        <td>Absender:</td>
+        <td><input name="from_new" type="text" size="30" /></td>
+      </tr>
+
+      <tr>
+        <td>Empfänger:</td>
+	<td><input name="to_new" type="text" size="30" /></td>
+      </tr>
+
+      <tr>
+        <td>Betreff:</td>
+        <td><input name="subject_new" type="text" size="50" /></td>
+      </tr>
+
+      <tr>
+        <td>Inhalt:</td>
+        <td><input name="body_new" type="text" size="50" /></td>
+      </tr>
+
+      <tr>
+        <td>Punktzahl:</td>
+        <td><input name="score_new" type="text" size="5" /></td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+[% INCLUDE common_formbottom %]
+
+[% END %]

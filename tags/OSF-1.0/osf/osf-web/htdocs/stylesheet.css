@@ -1,0 +1,83 @@
+html, body { 
+  color:           black;
+  background-color: #FFF6DF;
+  font-weight:     normal;
+  font-family:     sans-serif;
+  font-style:      normal;
+  text-decoration: none;
+  margin:  0;
+  padding: 0;
+  border:  0;
+}
+
+div#content {
+  padding-left: 20px;
+  padding-right: 20px;
+}
+
+
+div.header { 
+  width: 100%;
+  background-color: #FFD688;
+  border-top: 2px solid #6D6D6D;
+  border-bottom: 2px solid #6D6D6D;
+  padding-left: 20px;
+  padding-right: 20px;
+  padding-top: 0.5em;
+  padding-bottom: 0.5em;
+  margin-top: 2em;
+  margin-bottom: 2em;
+  margin-left: 0;
+  margin-right: 0;
+}
+
+div.header h1 {
+  font-size: 300%;
+  margin: 0;
+  padding: 0;
+  text-align: center;
+}
+
+#osflogo {
+  text-align: center;
+  margin-bottom: -1em;
+}
+
+A IMG {
+  border-width: 0;
+}
+
+
+div.header address {
+  display: block;
+  text-align: center;
+  font-size: 80%;
+  font-style: normal;
+}
+
+h2 {
+  font-size: 160%;
+  text-align: center;
+}
+
+a {
+  color: blue;
+}
+
+
+.box {
+  margin-left: 10%;
+  margin-right: 10%;
+  margin-top: 1ex;
+  margin-bottom: 1ex;
+  border: 1px solid black;
+  padding: 1em;
+  background-color: #F2F3F4;
+}
+
+.box H3 {
+  margin-top: 0;
+  text-align: left;
+  font-size: 110%;
+  font-weight: bold;
+}

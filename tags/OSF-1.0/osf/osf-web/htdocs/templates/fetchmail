@@ -1,0 +1,114 @@
+[% WRAPPER common_htmlpage title="Fetchmail konfigurieren" %]
+
+<p>
+  Der Open Security Filter kann in zwei Modi betrieben werden.
+  Entweder er wird direkt als Mailserver ins Internet geschaltet oder
+  er kann sich die E-Mails aus IMAP- oder POP3-Postfächern holen und
+  sie an einen lokalen Mailserver weiterleiten.  Wenn Sie den zweiten
+  Modus verwenden möchten, müssen Sie auf dieser Seite einstellen, aus
+  welchen Postfächern Sie die E-Mails abholen wollen.
+</p>
+
+<form method="post" action="[% self %]">
+
+[% INCLUDE widget_onoff
+	title="Fetchmail verwenden"
+	description="Wählen Sie hier &#8222;Ein&#8220;, wenn Sie Fetchmail verwenden wollen."
+	field="fetchmail_enabled" %]
+
+[% INCLUDE widget_textfield
+	title="Fetchmail-Intervall"
+	description="Geben Sie hier ein, alle wieviel Sekunden der Fetchmail-Prozess laufen soll."
+	length=5
+	field="fetchmail_interval" %]
+
+[% FOREACH rule = rules %]
+<div class="box">
+  <h3>Regel [% loop.count %]</h3>
+
+  <table border="0" cellpadding="2">
+    <tbody>
+      <tr>
+        <td>Servername:</td>
+        <td><input name="server_[% loop.count %]" type="text" size="30" value="[% rule.server FILTER html %]" /></td>
+      </tr>
+
+      <tr>
+        <td>Protokoll:</td>
+        <td>
+          <input type='radio' name='proto_[% loop.count %]' value='imap'[% IF rule.proto == 'imap' %] checked='checked'[% END %] />&nbsp;IMAP
+          &nbsp;&nbsp;&nbsp;
+          <input type='radio' name='proto_[% loop.count %]' value='pop3'[% IF rule.proto == 'pop3' %] checked='checked'[% END %]/>&nbsp;POP3
+        </td>
+      </tr>
+
+      <tr>
+        <td>Verschlüsselung verwenden:</td>
+        <td><input name="ssl_[% loop.count %]" value='1' type="checkbox"[% IF rule.ssl %] checked='checked'[% END %]>&nbsp;SSL</td>
+      </tr>
+
+      <tr>
+        <td>Benutzer auf Server:</td>
+        <td><input name="remoteuser_[% loop.count %]" type="text" size="20" value="[% rule.remoteuser FILTER html %]" /></td>
+      </tr>
+
+      <tr>
+        <td>Passwort auf Server:</td>
+        <td><input name="remotepw_[% loop.count %]" type="password" size="20" value="[% rule.remotepw FILTER html %]" /></td>
+      </tr>
+
+      <tr>
+        <td>Lokaler Benutzer:</td>
+        <td><input name="localuser_[% loop.count %]" type="text" size="20" value="[% rule.localuser FILTER html %]" /></td>
+      </tr>
+    </tbody>
+  </table>
+  <input type="checkbox" name="delete_[% loop.count %]" />&nbsp;Löschen
+</div>
+[% END %]
+
+<div class="box">
+  <h3>Neue Regel</h3>
+
+  <table border="0" cellpadding="2">
+    <tbody>
+      <tr>
+        <td>Servername:</td>
+        <td><input name="server_new" type="text" size="30" /></td>
+      </tr>
+
+      <tr>
+        <td>Protokoll:</td>
+        <td>
+          <input type='radio' name='proto_new' value='imap' checked='checked' />&nbsp;IMAP
+          &nbsp;&nbsp;&nbsp;
+          <input type='radio' name='proto_new' value='pop3' />&nbsp;POP3
+        </td>
+      </tr>
+
+      <tr>
+        <td>Verschlüsselung verwenden:</td>
+        <td><input name="ssl_new" type="checkbox">&nbsp;SSL</td>
+      </tr>
+
+      <tr>
+        <td>Benutzer auf Server:</td>
+        <td><input name="remoteuser_new" type="text" size="20" /></td>
+      </tr>
+
+      <tr>
+        <td>Passwort auf Server:</td>
+        <td><input name="remotepw_new" type="password" size="20" /></td>
+      </tr>
+
+      <tr>
+        <td>Lokaler Benutzer:</td>
+        <td><input name="localuser_new" type="text" size="20" /></td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+[% INCLUDE common_formbottom %]
+
+[% END %]

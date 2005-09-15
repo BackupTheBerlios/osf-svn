@@ -1,0 +1,5 @@
+#! /bin/sh -e
+
+# Remove final newline in isolinux files.
+
+perl -npi -e '/^Press/ && s/\n$//' $@

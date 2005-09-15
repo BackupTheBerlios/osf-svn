@@ -1,0 +1,23 @@
+#!/bin/sh
+
+set -e
+
+if [ "$1" = remove ]; then
+	deluser www-data shadow || :
+
+	rm -f /etc/apache-ssl/conf.d/osf-web
+	invoke-rc.d apache-ssl force-reload || :
+fi
+
+if [ "$1" = purge ]; then
+	rm -rf /etc/osf-web
+	rm -f /etc/apache-ssl/conf.d/osf-web
+	invoke-rc.d apache-ssl force-reload >/dev/null || :
+
+	chown -R root:root /var/lib/osf/genconf/
+	rm -rf /var/lib/osf/postfix-logreport/
+fi
+
+#DEBHELPER#
+
+exit 0

@@ -1,0 +1,26 @@
+Source: osf-base
+Section: misc
+Priority: optional
+Maintainer: Peter Eisentraut <peter.eisentraut@credativ.de>
+Build-Depends-Indep: debhelper (>= 4.1.16), cdbs (>= 0.4.0)
+Standards-Version: 3.6.2.1
+
+Package: osf-base
+Architecture: all
+Depends: netbase,
+ amavisd-new (>= 20030616), amavisd-new (<< 20040101),
+ courier-base, courier-imap, courier-authdaemon,
+ osf-pull-config,
+ logrotate+dateext, syslog-ng,
+ munin-node,
+ postfix,
+ osf-utils,
+ libtemplate-perl,
+ adduser,
+ ${shlibs:Depends}, ${misc:Depends}
+#kernel-image-2.6, firehol
+Suggests: fetchmail, bind9
+Conflicts: resolvconf
+Description: Open Security Filter base package
+ This package provides the foundations of the Open Security Filter,
+ in particular the configuration management.

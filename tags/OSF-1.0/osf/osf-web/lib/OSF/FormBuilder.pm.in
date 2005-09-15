@@ -1,0 +1,189 @@
+# -*-perl-*-
+package OSF::FormBuilder;
+
+use strict;
+use warnings;
+
+use CGI qw(:standard);
+use Template;
+
+use Exporter;
+use vars qw(@ISA @EXPORT);
+@ISA = qw(Exporter);
+@EXPORT = qw();
+
+
+
+sub print_config_form($\@\%)
+{
+    my $cgi = $_[0];
+    my @form_elements = @{$_[1]};
+    my %config = %{$_[2]};
+
+    my $self = $cgi->script_name();
+
+    my $template = Template->new( { INCLUDE_PATH => "@datadir@/templates/htdocs" } );
+
+    if (grep { $_->{type} eq 'extchoice' } @form_elements) {
+	print <<_EOF_;
+<script type="text/javascript"><!--
+function select_all(name, value)
+{
+    for (var i = 0; i < document.configform.elements.length; i++) {
+        if (document.configform.elements[i].name == name)
+            document.configform.elements[i].checked = value;
+    }
+}
+// -->
+</script>
+_EOF_
+    }
+
+    print <<_EOF_;
+<form name='configform' method='post' action='$self'>
+_EOF_
+
+    foreach my $item (@form_elements) {
+	my $type = $item->{type};
+	my $name = $item->{name};
+
+	if ($type eq 'title') {
+	    print '<h2>', $item->{title}, "</h2>\n";
+	}
+	elsif ($type eq 'boolean') {
+	    $template->process('widget_onoff', { title => $item->{title},
+						 description => $item->{description},
+						 field => $name,
+						 config => \%config });
+	}
+	elsif ($type eq 'value') {
+	    $template->process('widget_textfield', { title => $item->{title},
+						     description => $item->{description},
+						     field => $name,
+						     length => defined($item->{length}) ? $item->{length} : undef,
+						     num => defined($item->{num}) ? $item->{num} : undef,
+						     config => \%config });
+	}
+	elsif ($type eq 'list') {
+	    my @current_value = ();
+	    if (defined($config{$name})) {
+		@current_value = @{$config{$name}};
+	    }
+
+	    my $rows;
+	    my $cols;
+
+	    if (defined($item->{rows})) {
+		$rows = $item->{rows};
+	    } else {
+		my $size = scalar(@current_value);
+		$rows = sqrt($size) < 25 ? 5 : trunc(sqrt($size));
+		$rows++;
+	    }
+
+	    if (defined($item->{cols})) {
+		$cols = $item->{cols};
+	    } else {
+		$cols = 30;
+		foreach (@current_value) {
+		    if (length > $cols) { $cols = length }
+		}
+		$cols++;
+	    }
+
+	    $template->process('widget_textarea', { title => $item->{title},
+						    description => $item->{description},
+						    field => $name,
+						    rows => $rows,
+						    cols => $cols,
+						    config => \%config });
+	}
+	elsif ($type eq 'extchoice') {
+	    my @items = sort { lc($a) cmp lc($b) } @{$item->{list}};
+	    my @current_value = @{$config{$name}};
+	    my %selection;
+	    map { $selection{$_}=1 } @current_value;
+
+	    $template->process('widget_extchoice', { title => $item->{title},
+						     description => $item->{description},
+						     field => $name,
+						     items => \@items,
+						     selection => \%selection });
+	}
+	print "\n";
+    }
+
+    $template->process('common_formbottom');
+}
+
+
+sub form_to_config($\@\%)
+{
+    my $cgi = $_[0];
+    my @form_elements = @{$_[1]};
+    my %config = %{$_[2]};
+
+    my $template = Template->new( { INCLUDE_PATH => "@datadir@/templates/htdocs" } );
+
+    foreach my $item (@form_elements) {
+	my $type = $item->{type};
+	my $name = $item->{name};
+
+	if ($type eq 'boolean') {
+	    my $current_value = $cgi->param($name);
+	    $config{$name} = $current_value if defined($current_value);
+	}
+	elsif ($type eq 'value') {
+	    my $check = $item->{check};
+	    my $num = $item->{num};
+
+	    if (!defined($num)) {
+		my $current_value = $cgi->param($name);
+		if (defined($check) && defined($current_value) && $current_value ne '') {
+		    if (!&{$check}($current_value)) {
+			$template->process('common_formerror', { 'field' => $item->{title},
+								 'value' => $current_value });
+			return ();
+		    }
+		}
+		$config{$name} = $current_value if defined($current_value);
+	    }
+	    else {
+		foreach my $i (1..$num) {
+		    my $current_value = $cgi->param("$name$i");
+		    if (defined($check) && defined($current_value) && $current_value ne '') {
+			if (!&{$check}($current_value)) {
+			    $template->process('common_formerror', { 'field' => $item->{title},
+								     'value' => $current_value });
+			    return ();
+			}
+		    }
+		    $config{"$name$i"} = $current_value if defined($current_value);
+		}
+	    }
+	}
+	elsif ($type eq 'list') {
+	    my @current_value = split(/\s+/, $cgi->param($name));
+
+	    my $check = $item->{check};
+	    if (defined($check)) {
+		foreach (@current_value) {
+		    if (!&{$check}($_)) {
+			$template->process('common_formerror', { 'field' => $item->{title}, 'value' => $_ });
+			return ();
+		    }
+		}
+	    }
+	    $config{$name} = \@current_value;
+	}
+	elsif ($type eq 'extchoice') {
+	    my @current_value = $cgi->param($name);
+	    $config{$name} = \@current_value;
+	}
+    }
+
+    return %config;
+}
+
+
+1;

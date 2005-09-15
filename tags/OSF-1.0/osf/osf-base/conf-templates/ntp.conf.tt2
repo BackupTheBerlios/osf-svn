@@ -1,0 +1,32 @@
+[%# /etc/ntp.conf -%]
+# [% genconf_note %]
+
+driftfile /var/lib/ntp/ntp.drift
+statsdir /var/log/ntpstats/
+
+statistics loopstats peerstats clockstats
+filegen loopstats file loopstats type day enable
+filegen peerstats file peerstats type day enable
+filegen clockstats file clockstats type day enable
+
+[% IF ntpserver1 or ntpserver2 %]
+[% IF ntpserver1 %]server [% ntpserver1 %][% END %]
+[% IF ntpserver2 %]server [% ntpserver2 %][% END %]
+[% ELSE %]
+server pool.ntp.org
+server pool.ntp.org
+server pool.ntp.org
+[% END %]
+
+# ... and use the local system clock as a reference if all else fails
+# NOTE: in a local network, set the local stratum of *one* stable server
+# to 10; otherwise your clocks will drift apart if you lose connectivity.
+server 127.127.1.0
+fudge 127.127.1.0 stratum 13
+
+# By default, exchange time with everybody, but don't allow configuration.
+# See /usr/share/doc/ntp-doc/html/accopt.html for details.
+restrict default kod notrap nomodify nopeer noquery
+
+# Local users may interrogate the ntp server more closely.
+restrict 127.0.0.1 nomodify

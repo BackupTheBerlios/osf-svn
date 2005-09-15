@@ -1,0 +1,49 @@
+[% WRAPPER common_htmlpage title="Externe Spamfilterdienste konfigurieren" %]
+
+<form method="post" action="">
+
+<div class="box">
+  <h3>Externe Tests einschalten</h3>
+  <p>
+    Die auf dieser Seite konfigurierbaren Spamtests greifen auf Server
+    im Internet zu, um eingehende E-Mails zu prüfen.  Wenn Sie das
+    nicht wollen, können Sie alle Tests, die auf externe Server
+    zugreifen, ausschalten.
+  </p>
+  <p>
+    <input type='radio' name='remotetests' value='1'[% IF config.remotetests %] checked='checked'[% END %] />&nbsp;Ein
+    &nbsp;&nbsp;&nbsp;
+    <input type='radio' name='remotetests' value='0'[% IF !config.remotetests %] checked='checked'[% END %] />&nbsp;Aus
+  </p>
+</div>
+
+<div class="box">
+  <h3>DNS-Blackhole-Listen</h3>
+  <p>
+   Hier können Sie die DNS-Blackhole-Listen aktiveren und ihnen eine
+   Punktzahl zuweisen.  Wenn Sie keine Punktzahl angeben, werden
+   vorgegebene Punktzahlen verwendet.
+  </p>
+
+  <table border="1" cellpadding="5">
+    <tbody>
+[% FOREACH key = lists.keys.sort %]
+      <tr>
+        <td>
+          <input type="checkbox" name="[% key %]_enabled" [%  IF config.dnsblacklists.${key}.enabled %]checked[% END %] value='1'> Aktiv
+        </td>
+        <td>
+          <a href="[% lists.$key.infourl %]">[% lists.$key.name %]</a> ([% lists.$key.longname %])
+        </td>
+        <td>
+          Punktzahl: <input type="text" name="[% key %]_score" size="5" value="[% config.dnsblacklists.${key}.score FILTER html %]">
+        </td>
+      </tr>
+[% END %]
+    </tbody>
+  </table>
+</div>
+
+[% INCLUDE common_formbottom %]
+
+[% END %]

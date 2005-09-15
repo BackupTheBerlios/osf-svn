@@ -1,0 +1,3 @@
+debian/etc/apache.conf etc/osf-web/
+debian/squirrelmail_config.php usr/share/osf-web
+debian/squirrelmail_theme.php usr/share/osf-web

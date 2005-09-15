@@ -1,0 +1,12 @@
+Source: osf-doc
+Section: doc
+Priority: optional
+Maintainer: Peter Eisentraut <peter.eisentraut@credativ.de>
+Standards-Version: 3.6.1.1
+Build-Depends-Indep: debhelper (>= 4.1.0), cdbs (>= 0.4.0), openjade | jade, xsltproc, jadetex, docbook-xsl, docbook-dsssl
+
+Package: osf-doc
+Architecture: all
+Description: documentation for Open Security Filter
+ This package contains the documentation of the Open
+ Security Filter suite.

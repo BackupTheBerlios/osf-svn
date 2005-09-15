@@ -1,0 +1,9 @@
+
+<p>
+  <input type="submit" name="submit" value="Übernehmen" />&nbsp;<input type="reset" value="Zurücksetzen" />
+</p>
+</form>
+
+<p>
+  <a href="./">Zurück zur Hauptseite</a>
+</p>

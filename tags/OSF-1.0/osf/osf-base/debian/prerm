@@ -1,0 +1,118 @@
+#! /bin/bash
+
+set -e
+
+action=$1
+
+
+function remove_issue() {
+	if [ -f /etc/issue.net.orig ]; then
+	        mv /etc/issue.net.orig /etc/issue.net
+	fi
+	if [ -f /etc/issue.orig ]; then
+	        mv /etc/issue.orig /etc/issue
+	fi
+}
+
+
+function remove_logrotate() {
+	if [ -f /etc/logrotate.d/syslog-ng.orig ]; then
+		mv /etc/logrotate.d/syslog-ng.orig.disabled /etc/logrotate.d/syslog-ng
+	fi
+}
+
+
+function remove_postfix() {
+	if [ -f /etc/postfix/master.cf.orig ]; then
+		mv /etc/postfix/master.cf.orig /etc/postfix/master.cf
+		invoke-rc.d postfix force-reload
+	fi
+}
+
+
+function remove_resolv() {
+	if [ -f /etc/resolv.conf.orig ]; then
+		mv /etc/resolv.conf.orig /etc/resolv.conf
+	fi
+}
+
+
+function remove_inittab() {
+	local line="S0:12345:respawn:/sbin/getty -L 57600 ttyS0 vt102"
+
+	if grep -F -q "$line" /etc/inittab; then
+		local temp=$(mktemp /etc/inittab.XXXXXX)
+		grep -F -v "$line" /etc/inittab >$temp
+		mv $temp /etc/inittab
+	fi
+}
+
+function remove_courier() {
+	if [ -f /etc/courier/authdaemonrc.orig ]; then
+		mv /etc/courier/authdaemonrc.orig /etc/courier/authdaemonrc
+		invoke-rc.d courier-authdaemon force-reload
+	fi
+
+        if [ -f /etc/courier/imapd.orig ]; then
+                mv /etc/courier/imapd.orig /etc/courier/imapd
+                invoke-rc.d courier-imap force-reload
+        fi
+}
+
+
+
+function remove_pullconfig() {
+	perl -pi -e '/^MASTER=/ and $_ = "MASTER=\"\"\n"' \
+	  /etc/osf-pull-config/pull-config.conf
+}
+
+
+function purge_amavis() {
+	rm -f /etc/amavis/amavisd-static.conf
+}
+
+
+function remove_spamassassin {
+	if [ -f /etc/spamassassin/init.pre.orig ]; then
+		mv /etc/spamassassin/init.pre.orig /etc/spamassassin/init.pre
+	fi
+	if [ -f /etc/spamassassin/local.cf.orig ]; then
+		mv /etc/spamassassin/local.cf.orig /etc/spamassassin/local.cf
+	fi
+}
+
+
+function remove_firehol() {
+	if [ -f /etc/firehol/firehol.conf.orig ]; then
+		mv /etc/firehol/firehol.conf.orig /etc/firehol/firehol.conf
+		mv /etc/default/firehol.orig /etc/default/firehol
+		invoke-rc.d firehol restart
+	fi
+}
+
+function remove_clamav() {
+	deluser clamav amavis
+}
+
+
+if [ "$action" = remove ]; then
+	remove_issue
+	remove_logrotate
+	remove_postfix
+	remove_resolv
+	remove_inittab
+	remove_courier
+	remove_pullconfig
+	remove_spamassassin
+#	remove_firehol
+	remove_clamav
+fi
+
+if [ "$action" = purge ]; then
+	purge_amavis
+	rm -rf /var/lib/osf/genconf/
+fi
+
+#DEBHELPER#
+
+exit 0

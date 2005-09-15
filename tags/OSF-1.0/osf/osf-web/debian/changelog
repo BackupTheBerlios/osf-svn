@@ -1,0 +1,64 @@
+osf-web (20050915) unstable; urgency=low
+
+  * Only ask for password once during installation
+
+ -- Peter Eisentraut <peter.eisentraut@credativ.de>  Thu, 15 Sep 2005 09:49:12 +0200
+
+osf-web (20050912) unstable; urgency=low
+
+  * Updated standards version
+  * Various fixes to debconf handling
+  * Added dependency on amavis-stats
+
+ -- Peter Eisentraut <peter.eisentraut@credativ.de>  Mon, 12 Sep 2005 14:46:11 +0200
+
+osf-web (20050902) unstable; urgency=low
+
+  * Added debconf handling to get password for user "virus-quarantine"
+
+ -- Steffen Joeris <steffen.joeris@credativ.de>  Fri,  2 Sep 2005 14:28:13 +0200
+
+osf-web (20050220) unstable; urgency=low
+
+  * Squirrelmail should send emails to port 10025 directly
+
+ -- Peter Eisentraut <peter.eisentraut@credativ.de>  Sun, 20 Feb 2005 09:35:42 +0100
+
+osf-web (20050218) unstable; urgency=low
+
+  * Bug fix release
+
+ -- Peter Eisentraut <peter.eisentraut@credativ.de>  Fri, 18 Feb 2005 10:36:23 +0100
+
+osf-web (20041207) unstable; urgency=low
+
+  * Converted to CDBS
+  * Fixes for i18n
+
+ -- Peter Eisentraut <peter.eisentraut@credativ.de>  Tue,  7 Dec 2004 10:53:55 +0100
+
+osf-web (20041203) unstable; urgency=low
+
+  * Turned off AddDefaultCharset
+  * Linked credativ logo to web site
+  * Fixed config upload
+
+ -- Peter Eisentraut <peter.eisentraut@credativ.de>  Fri,  3 Dec 2004 10:20:13 +0100
+
+osf-web (20041126) unstable; urgency=low
+
+  * Removed configuration of nameserver (must be done by installer)
+
+ -- Peter Eisentraut <peter.eisentraut@credativ.de>  Fri, 26 Nov 2004 13:33:36 +0100
+
+osf-web (20041116) unstable; urgency=low
+
+  * Added fetchmail configuration
+
+ -- Peter Eisentraut <peter.eisentraut@credativ.de>  Tue, 16 Nov 2004 14:56:03 +0100
+
+osf-web (20041008) unstable; urgency=low
+
+  * Initial release
+
+ -- Peter Eisentraut <peter.eisentraut@credativ.de>  Fri,  8 Oct 2004 16:46:57 +0200

@@ -1,0 +1,14 @@
+[% WRAPPER common_htmlpage title="Fehler in der Eingabe" %]
+
+<div class="box">
+  <h3>Fehler</h3>
+  <p>
+    Der eingegebene Wert &#8222;[% value %]&#8220; im Feld [% field %] ist ungültig.
+  </p>
+</div>
+
+<p>
+  <a href="javascript:history.back()">Zurück zur Eingabe</a>&nbsp;|&nbsp;<a href="./">Zurück zur Hauptseite</a>
+</p>
+
+[% END %]

@@ -1,0 +1,24 @@
+<div class='box'>
+  <h3>[% title %]</h3>
+  <p>[% description %]</p>
+
+  <p>
+    <a href='javascript:select_all("[% field %]", 1)'>Alle Auswählen</a>
+    &nbsp;&nbsp;&nbsp;
+    <a href='javascript:select_all("[% field %]", 0)'>Alle Abwählen</a>
+  </p>
+
+  <table border='0' cellpadding='2'>
+    <tbody>
+[% FOREACH item = items -%]
+[% IF loop.index % 8 == 0 -%]
+[% IF loop.index > 0 %]      </tr>
+[% END -%]
+      <tr>
+[% END -%]
+        <td><input type='checkbox' name='[% field %]' value='[% item %]'[% IF selection.$item %] checked='checked'[% END %] />&nbsp;[% item %]&nbsp;</td>
+[% END -%]
+      </tr>
+    </tbody>
+  </table>
+</div>

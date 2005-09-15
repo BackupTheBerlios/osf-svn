@@ -1,0 +1,83 @@
+osf-base (20050915) unstable; urgency=low
+
+  * Only ask for password once during installation
+
+ -- Peter Eisentraut <peter.eisentraut@credativ.de>  Thu, 15 Sep 2005 09:49:12 +0200
+
+osf-base (20050912) unstable; urgency=low
+
+  * Updated standards version
+  * Added adduser dependency
+  * Moved password prompt from postinst to config
+  * Added previously forgotten debconf template file
+
+ -- Peter Eisentraut <peter.eisentraut@credativ.de>  Mon, 12 Sep 2005 13:34:52 +0200
+
+osf-base (20050902) unstable; urgency=low
+
+  * Added debconf handling to get password for user "admin"
+
+ -- Steffen Joeris <steffen.joeris@credativ.de>  Fri,  2 Sep 2005 13:55:00 +0200
+
+osf-base (20050729) unstable; urgency=low
+
+  * Make fetchmailrc.tt2 always produce a valid configuration file
+
+ -- Peter Eisentraut <peter.eisentraut@credativ.de>  Fri, 29 Jul 2005 10:55:45 +0200
+
+osf-base (20050714) unstable; urgency=low
+
+  * Rename old logrotate files to .orig.disabled so logrotate ignores them
+
+ -- Peter Eisentraut <peter.eisentraut@credativ.de>  Thu, 14 Jul 2005 15:21:35 +0200
+
+osf-base (20050712) unstable; urgency=low
+
+  * Add user clamav to group amavis
+
+ -- Steffen Joeris <steffen.joeris@credativ.de>  Tue, 12 Jul 2005 11:47:38 +0200
+
+osf-base (20050218) unstable; urgency=low
+
+  * Bug fix release
+  
+ -- Peter Eisentraut <peter.eisentraut@credativ.de>  Fri, 18 Feb 2005 13:44:00 +0100
+
+osf-base (20050217) unstable; urgency=low
+
+  * Only create SSH key for root if there isn't one already
+
+ -- Peter Eisentraut <peter.eisentraut@credativ.de>  Thu, 17 Feb 2005 11:27:22 +0100
+
+osf-base (20041207) unstable; urgency=low
+
+  * Converted to CDBS
+
+ -- Peter Eisentraut <peter.eisentraut@credativ.de>  Tue,  7 Dec 2004 10:53:55 +0100
+
+osf-base (20041203) unstable; urgency=low
+
+  * Added preconfiguration of localhost ssh access
+
+ -- Peter Eisentraut <peter.eisentraut@credativ.de>  Fri,  3 Dec 2004 10:20:13 +0100
+
+osf-base (20041126) unstable; urgency=low
+
+  * Added configuration of spamassassin 3
+  * Removed configuration of nameserver (must be done by installer)
+  * Disabled kernel 2.6, firehol for now
+  * Added missing dependencies
+
+ -- Peter Eisentraut <peter.eisentraut@credativ.de>  Fri, 26 Nov 2004 13:22:29 +0100
+
+osf-base (20041116) unstable; urgency=low
+
+  * Added fetchmailrc
+
+ -- Peter Eisentraut <peter.eisentraut@credativ.de>  Tue, 16 Nov 2004 14:56:03 +0100
+
+osf-base (20041008) unstable; urgency=low
+
+  * Initial release
+
+ -- Peter Eisentraut <peter.eisentraut@credativ.de>  Fri,  8 Oct 2004 16:46:57 +0200

@@ -1,0 +1,2 @@
+var/lib/osf/postfix-logreport usr/share/osf-web/htdocs/postfix-logreport
+usr/share/osf-web/squirrelmail_theme.php usr/share/squirrelmail/themes/open_security_filter.php

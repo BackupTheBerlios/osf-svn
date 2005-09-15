@@ -1,0 +1,13 @@
+version 5
+
+interface eth0 external
+	server smtp accept	# 25
+	server dns accept	# 53
+	client all accept
+
+interface eth1 internal
+	server ssh accept	# 22
+	server smtp accept	# 25
+	server dns accept	# 53
+	server https accept	# 443
+	client all accept

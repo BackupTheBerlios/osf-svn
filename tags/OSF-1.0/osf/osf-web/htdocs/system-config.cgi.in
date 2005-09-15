@@ -1,0 +1,150 @@
+#! @PERL@
+
+BEGIN {
+    unshift @INC, '@datadir@';
+}
+
+use strict;
+no strict qw(refs);
+use warnings;
+use English;
+
+use CGI qw(:standard);
+
+use OSF::HTML;
+use OSF::Config;
+use OSF::Validate;
+use OSF::FormBuilder;
+
+use Template;
+
+my $template = Template->new( { INCLUDE_PATH => "@datadir@/templates/htdocs" } );
+
+
+our @form_elements =
+  (
+   {
+    type => 'title',
+    title => 'Essenzielle Einstellungen'
+   },
+   {
+    name => 'mainswitch',
+    type => 'boolean',
+    title => 'Security Filter aktivieren',
+    description =>
+    'Hier können Sie den Security Filter ausschalten.  Das System wird E-Mails dann ungeprüft weiterleiten.'
+   },
+   {
+    name => 'relaydomains',
+    type => 'list',
+    title => 'E-Mail-Domains',
+    description =>
+    'Tragen Sie hier die Domains ein, für die Sie E-Mail empfangen wollen.',
+    check => \&is_valid_fqhostname,
+   },
+   {
+    name => 'maindomain',
+    type => 'value',
+    title => 'Hauptdomain',
+    description =>
+    'Tragen Sie hier eine Hauptdomain ein, die für Benachrichtigungen, Bounce-Meldungen, Statusanzeigen und ähnliches verwendet werden soll.  Das sollte in der Regel eine der oben eingestellten E-Mail-Domains sein.  Wenn Sie nichts eintragen, dann wird &#8222;localdomain&#8220; verwendet, was aber nur eingeschränkt funktionieren wird.',
+    length => 30,
+   },
+   {
+    name => 'relayhost',
+    type => 'value',
+    title => 'Relay-Host',
+    description =>
+    'Tragen Sie hier den Hostnamen oder die IP-Adresse Ihres E-Mail-Servers ein.  Der Security Filter leitet geprüfte E-Mails an diesen Server weiter.  Sie müssen einen Relay-Host angeben, ansonsten kann keine E-Mail verarbeitet werden.',
+    length => 30,
+    check => \&is_valid_host
+   },
+#   {
+#    name => 'nameserver',
+#    type => 'value',
+#    num => 3,
+#    title => 'Nameserver',
+#    description =>
+#    'Tragen Sie hier die IP-Adressen Ihrer DNS-Nameserver ein.  Sie können bis zu drei Server angeben.',
+#    length => 30,
+#    check => \&is_valid_ip_address
+#   },
+   {
+    type => 'title',
+    title => 'Weitere Einstellungen'
+   },
+   {
+    name => 'ntpserver',
+    type => 'value',
+    num => 2,
+    title => 'NTP-Server',
+    description =>
+    'Hier können Sie eigene NTP-Server einstellen.  Wenn Sie die Felder leer lassen, wird ein voreingestellter NTP-Server im Internet verwendet.',
+    length => 30,
+    check => \&is_valid_host
+   },
+   {
+    name => 'syslogserver',
+    type => 'value',
+    title => 'Syslog-Server',
+    description =>
+    'Hier können Sie einen zusätzlichen Syslog-Server einstellen.  Wenn Sie das Feld leer lassen, wird nur lokal geloggt.',
+    length => 30,
+    check => \&is_valid_host
+   },
+   {
+    name => 'rootmail',
+    type => 'value',
+    title => 'System-E-Mails',
+    description =>
+    'Hier können Sie eine E-Mail-Adresse angeben, an die System-E-Mails (root, postmaster u.a.) weitergeleitet werden sollen.  Wenn Sie dieses Feld leer lassen, dann werden System-E-Mails lokal in der Mailbox vom Benutzer &#8222;admin&#8220; gespeichert, die Sie mit dem <a href="/squirrelmail/">Web-Mail-Client</a> lesen können.',
+    length => 30,
+    check => \&is_valid_email_address,
+   }
+);
+
+
+sub print_config_form($)
+{
+    my ($cgi) = @_;
+    my %config = read_config_file();
+
+    html_top($cgi);
+    $template->process('common_htmltop', { title => "Systemkonfiguration" });
+    OSF::FormBuilder::print_config_form($cgi, @form_elements, %config);
+    $template->process('common_htmlbottom');
+    html_bottom();
+}
+
+
+sub do_submit($)
+{
+    my ($cgi) = @_;
+    my %config;
+
+    html_top($cgi);
+
+    %config = read_config_file();
+    %config = OSF::FormBuilder::form_to_config($cgi, @form_elements, %config) or return;
+
+    eval {
+	write_config_file(%config);
+    };
+    $template->process('common_submitresponse', { error => $@ });
+    html_bottom();
+}
+
+
+#
+# Main program
+#
+
+my $cgi = new CGI();
+
+if ($cgi->param("submit")) {
+    do_submit($cgi);
+} else {
+    print_config_form($cgi);
+}
+
+exit 0;

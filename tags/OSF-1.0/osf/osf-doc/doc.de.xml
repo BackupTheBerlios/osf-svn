@@ -1,0 +1,1000 @@
+<?xml version='1.0' encoding='iso-8859-15'?>
+<!DOCTYPE book PUBLIC "-//OASIS//DTD DocBook XML V4.2//EN" "http://www.oasis-open.org/docbook/xml/4.2/docbookx.dtd">
+<book lang="de">
+  <bookinfo>
+    <title>Open Security Filter Dokumentation</title>
+    <corpauthor>credativ GmbH</corpauthor>
+    <copyright>
+      <year>2005</year>
+      <holder>credativ GmbH</holder>
+    </copyright>
+
+    <date>18.02.2005</date>
+  </bookinfo>
+
+
+  <chapter id="einfuehrung">
+    <title>Einführung</title>
+
+    <para>Der Open Security Filter ist der effizienteste Schutz
+    Ihres Netzwerkes vor den Risiken des Internets.  Zahlreiche große
+    und kleine Unternehmen sowie staatliche Institutionen setzen den
+    Open Security Filter bereits erfolgreich zur Absicherung vor
+    Netzwerkangriffen, Viren und Spam ein.</para>
+
+    <para>Die vorliegende Version des Open Security Filters bietet
+    die komplette Basisfunktionalität zum Schutz des Netzwerks vor
+    E-Mail-Müll für kleine und mittelständische Unternehmen und
+    Institutionen.  Sie bietet:
+
+      <itemizedlist>
+        <listitem>
+          <para>Schutz vor E-Mail-Viren</para>
+        </listitem>
+
+        <listitem>
+          <para>Aussortieren von Spam</para>
+        </listitem>
+
+        <listitem>
+          <para>Administration über eine grafische Web-Oberfläche</para>
+        </listitem>
+
+        <listitem>
+          <para>Besteht vollständig aus freier Software</para>
+        </listitem>
+      </itemizedlist>
+    </para>
+
+    <para>Doch der Open Security Filter ist erweiterbar und wächst
+    mit den Anforderungen und Ansprüchen Ihres Netzwerks mit.  Unter
+    anderem sind erhältlich:
+
+      <itemizedlist>
+        <listitem>
+          <para>Filtern von Web-Zugriffen (Surfen) auf Viren und
+          unerwünschte Inhalte</para>
+        </listitem>
+
+        <listitem>
+          <para>Erhöhte Ausfallsicherheit und Skalierbarkeit durch
+          Clustering</para>
+        </listitem>
+
+        <listitem>
+          <para>Zusätzliche Konfigurationsmöglichkeiten,
+          Administrationsrollen</para>
+        </listitem>
+
+        <listitem>
+          <para>Einbindung zusätzlicher Virenscanner und anderer
+          Filterlösungen auf Kundenwunsch</para>
+        </listitem>
+      </itemizedlist>
+    </para>
+
+    <sect1 id="einfuehrung-viren">
+      <title>Schutz vor Viren</title>
+
+      <para>Viren sind Programmteile, die dazu gedacht sind, auf Ihren
+      Computersystemen oder Netzwerken Schaden anzurichten.  Während
+      Viren früher hauptsächlich durch gefälschte Shareware-Angebote
+      oder illegale Softwarekopien verteilt wurden, werden Viren heute
+      hauptsächlich über E-Mail-Anhänge verschickt und durch
+      ahnungslose Anwender oder nachlässig konfigurierte
+      E-Mail-Programme in die Systeme eingespielt.</para>
+
+      <para>Der Open Security Filter wird zwischen das Internet
+      und Ihren Mailserver geschalten.  Er analysiert jede eingehende
+      E-Mail auf Viren und leitet nur virenfreie E-Mails weiter.
+      E-Mails mit Virenverdacht werden in einem speziellen
+      Quarantänebereich abgelegt, wo sie vom Administrator inspiziert
+      und in Einzelfällen weitergeleitet werden können.</para>
+
+      <para>Zur Erkennung von Viren setzt der Open Security Filter
+      auf den erprobten freien Virenscanner ClamAV.  ClamAV wird von
+      einer weltweiten Gruppe von Experten gewartet und stellt
+      selbstverständlich dauernd aktuelle Virensignaturen zur
+      Verfügung, und das alles ohne Lizenzkosten.  Auf Wunsch können
+      in den Open Security Filter auch einfach Virenscanner von
+      anderen Herstellern eingebunden werden.  (Dabei fallen jedoch
+      zusätzliche Lizenzkosten an.)</para>
+    </sect1>
+
+    <sect1 id="einfuehrung-spam">
+      <title>Schutz vor Spam</title>
+
+      <para>Spam ist über E-Mail versendeter Werbemüll.  Da das Senden
+      von E-Mail automatisch und blitzschnell geht und wegen
+      nachlässig konfigurierter E-Mail-Systeme teilweise anonym über
+      Dritte abgewickelt werden kann, ist Werbe-E-Mail zu einem
+      volkswirtschaftlichen Problem geworden.  Mehrere unabhängige
+      Studien gehen davon aus, dass mittlerweile über 50% des
+      weltweiten E-Mail-Verkehrs Spam ist.  Dieser Spam landet in den
+      Postfächern der Anwender und muss von Hand gelöscht
+      werden.</para>
+
+      <para>Der Open Security Filter wird zwischen das Internet
+      und Ihren Mailserver geschalten.  Er ermittelt für jede
+      eingehende E-Mail anhand von Regeln, Mustervergleichen,
+      Vergleichen mit global gepflegten Blocklisten, statistischen
+      Analysen und anderen Merkmalen die Wahrscheinlichkeit, dass die
+      E-Mail Spam ist.  Diese Wahrscheinlichkeit wird durch eine
+      Punktzahl ausgedrückt, die in der E-Mail vermerkt wird.  Anhand
+      dieser Punktzahl können Anwender oder Administratoren E-Mails
+      mit Spamverdacht in andere Postfächer aussortieren oder gleich
+      löschen.</para>
+
+      <para>Zur Einstufung von Spam verwendet der Open Security
+      Filter die Software SpamAssassin, im Bereich freier Software die
+      Standardlösung für die Spamproblematik.  Die Erkennungsregeln
+      werden regelmäßig anhand einer großen Zahl von E-Mails neu
+      gewichtet und ermöglichen daher eine äußerst genaue Einstufung
+      von E-Mail ohne <quote>False Positives</quote>.</para>
+    </sect1>
+
+    <sect1 id="einfuehrung-admin">
+      <title>Administrationsoberfläche</title>
+
+      <para>Alle Versionen des Open Security Filters werden über
+      eine komfortable Web-Oberfläche administriert, die wichtige
+      Einstellung grafisch aufbereitet und die Details der einzelnen
+      Softwarekomponenten und des Betriebssystems verbirgt.</para>
+    </sect1>
+
+    <sect1 id="einfuehrung-freie-software">
+      <title>Freie Software</title>
+
+      <para>Der Open Security Filter ist komplett mit freier
+      Software realisiert.  Freie Software bedeutet, dass Sie als
+      Anwender den kompletten Quellcode für alle Software erhalten und
+      das Recht haben, eigene Änderungen vorzunehmen und
+      weiterzugeben, alles ohne Lizenzkosten.  Durch die Offenlegung
+      des Quellcodes und das durch die liberalen Lizenzen geförderte
+      kollaborative Klima bietet freie Software hohe Stabilität und
+      Sicherheit sowie einzigartige Reaktionszeiten auf
+      Probleme.</para>
+    </sect1>
+  </chapter>
+
+
+  <chapter id="funktion">
+    <title>Funktionsweise</title>
+
+    <para>Dieses Kapitel erklärt die Funktionsweise des Open
+    Security Filter.  Sie sollten dieses Kapitel lesen und verstehen,
+    damit Sie im Folgenden sinnvolle Konfigurationseinstellungen
+    erzeugen können.</para>
+
+    <sect1 id="funktion-ablauf">
+      <title>Filtervorgang</title>
+
+      <para>Die folgende Übersicht beschreibt den grundlegenden Ablauf
+      der Filtervorgänge im Open Security Filter.  Einzelheiten
+      werden in den folgenden Abschnitten erläutert.</para>
+
+<!--
+      <remark>Prüfen ob das hier überhaupt so stimmt!</remark>
+-->
+
+      <procedure>
+        <step>
+          <para>Wenn der Absender in der Whitelist steht, wird die
+          E-Mail sofort durchgelassen.  Wenn der Absender in der
+          Blacklist steht, dann wird die E-Mail sofort verworfen.</para>
+        </step>
+
+        <step>
+          <para>Die Anhänge der E-Mail werden überprüft.  Wenn ein
+          verbotener Anhang erkannt wird, wird die E-Mail in die
+          Quarantäne verschoben und die Bearbeitung beendet.  Wenn die
+          Quarantäne ausgeschaltet ist, dann wird die E-Mail
+          gelöscht.</para>
+        </step>
+
+        <step>
+          <para>Die E-Mail wird auf Viren geprüft.  Wenn ein Virus
+          erkannt wird, dann wird die E-Mail in die Quarantäne
+          verschoben und die Bearbeitung beendet.  Wenn die Quarantäne
+          ausgeschaltet ist, dann wird die E-Mail gelöscht.</para>
+        </step>
+
+        <step>
+          <para>Die E-Mail wird auf Spam analysiert.  Dabei wird eine
+          Punktzahl errechnet und in die E-Mail-Header eingefügt.  Die
+          E-Mail wird weitergeleitet.</para>
+        </step>
+      </procedure>
+    </sect1>
+
+
+    <sect1 id="funktion-quarantaene">
+      <title>Virusquarantäne</title>
+
+      <para>Wenn der Open Security Filter einen Virus oder einen
+      geblockten Anhang entdeckt, dann gibt es zwei Möglichkeiten:
+      Entweder die E-Mail wird in einen Quarantänebereich verschoben
+      oder sie wird komplett gelöscht.  Dies können Sie in der
+      Konfiguration einstellen.  E-Mails mit Viren oder geblockten
+      Anhängen werden auf keinen Fall an den Empfänger zugestellt,
+      weil Viren gerade leichtsinnige Anwender und schlecht
+      konfigurierte E-Mail-Programme ausnutzen; somit würde durch eine
+      Zustellung der Sinn des Virenfilters zu Nichte gemacht.</para>
+
+      <para>Neben der Quarantänisierung können zwei weitere Aktionen
+      durchgeführt werden: Erstens kann der eigentlich vorgesehene
+      Empfänger eine E-Mail erhalten, dass eine infizierte E-Mail
+      abgefangen wurde.  Zweitens kann der Administrator ebenfalls
+      eine solche E-Mail erhalten.  Der Administrator kann daraufhin
+      die E-Mail in der Quarantäne löschen, sie auf Anfrage des
+      Endnutzers weiterleiten oder anderweitig verwerten.</para>
+
+      <para>Der Quarantänebereich ist genauer gesagt ein
+      E-Mail-Postfach, das auf dem Open Security Filter verwaltet
+      wird und in dem alle infizierten E-Mails auflaufen.  Der
+      Open Security Filter erlaubt über einen Webmail-Client
+      Zugriff auf dieses Postfach und der Administrator hat dadurch
+      eine komfortable Oberfläche, um die E-Mails einzusehen, zu
+      löschen oder weiterzuleiten.  Aus Sicherheitsgründen können Sie
+      nicht mit externen E-Mail-Programmen auf diesen
+      Quarantänebereich zugreifen.</para>
+
+      <para>Folgende Einstellungen sind für die Virenfilterung zu
+      empfehlen:
+
+        <itemizedlist>
+          <listitem>
+            <para>Die Quarantäne sollte an sein (Voreinstellung), weil
+            Sie sonst möglicherweise wichtige E-Mails verlieren
+            könnten.</para>
+          </listitem>
+
+          <listitem>
+            <para>Der eigentliche Empfänger sollte Hinweis-E-Mails
+            erhalten (Voreinstellung).</para>
+          </listitem>
+
+          <listitem>
+            <para>Ob der Administrator Hinweis-E-Mails erhalten soll,
+            ist Ihnen überlassen.  Diese Funktion ist in der
+            Voreinstellung aus.</para>
+          </listitem>
+        </itemizedlist>
+      </para>
+    </sect1>
+
+    <sect1 id="funktion-spam">
+      <title>Spambewertung</title>
+
+      <para>Im Gegensatz zum Virenscannen ist es nicht möglich, Spam
+      anhand einer Datenbank voller bekannter Muster sicher zu
+      erkennen.  Spam besteht aus natürlicher Sprache, ist
+      individuell, veränderlich und wird von Spammern immer wieder
+      angepasst, um Spamfilter zu umgehen.  Der Open Security
+      Filter wendet daher eine Reihe von Methoden an, um zu errechnen,
+      wie wahrscheinlich es ist, dass eine bestimmte E-Mail Spam ist:
+
+        <itemizedlist>
+          <listitem>
+            <para>Die E-Mail wird anhand einer Vielzahl vorgefertigter
+            Regeln auf typische Spammerkmale untersucht, zum Beispiel
+            Schlagworte von Kaufangeboten, Namen von Arzneimitteln,
+            viele Ausrufezeichen oder viele ähnliche
+            Empfängeradressen.</para>
+          </listitem>
+
+          <listitem>
+            <para>Die Liste der Server, durch die die E-Mail auf dem
+            Weg vom Absender zum Empfänger unterwegs war, wird mit
+            Blocklisten verglichen, welche Server listen, die als
+            Spamquellen bekannt sind.  Diese Blocklisten werden durch
+            die weltweite Kooperation von Spambekämpfern ständig mit
+            neuen Erkenntnissen aktualisiert.</para>
+          </listitem>
+
+          <listitem>
+            <para>Das System erstellt Statistiken darüber, welche
+            Wörter in den E-Mails eher mehr oder eher weniger auf Spam
+            hinweisen.  Diese Statistiken werden mit jeder E-Mail
+            aktualisiert und man kann damit auf Grund des
+            individuellen E-Mail-Aufkommens jedes Anwenders eine
+            Spamwahrscheinlichkeit errechnen.</para>
+          </listitem>
+        </itemizedlist>
+      </para>
+
+      <para>Keiner dieser Ansätze ist totsicher.  Deshalb werden die
+      vielen individuellen Regeln, Blocklisten und Statistiken
+      kombiniert und daraus für jede E-Mail eine Punktzahl errechnet.
+      Positive Punktzahlen bedeuten, <quote>diese E-Mail ist
+      wahrscheinlich Spam</quote>; negative Punktzahlen bedeuten,
+      <quote>diese E-Mail ist wahrscheinlich kein Spam</quote>.  Der
+      Anwender kann dann auf Grund seiner eigenen Vorstellungen,
+      seinen Erfahrungen und seiner <quote>Risikobereitschaft</quote>
+      festlegen, wie er mit höher und niedriger bepunkteten E-Mails
+      verfahren möchte.</para>
+
+      <sect2>
+        <title>Spam aussortieren</title>
+
+        <para>Der Open Security Filter selbst löscht keine
+        E-Mails, die als Spam verdächtigt werden.  Diese E-Mails
+        werden lediglich markiert und müssen von den nachgeschalteten
+        Mailservern oder E-Mail-Programmen aussortiert werden.  Dass
+        heißt, Sie müssen in der Regel Ihre E-Mail-Clients so
+        konfigurieren, dass die vom Open Security Filter als Spam
+        erkannten E-Mails aussortiert oder gelöscht werden, bzw. Sie
+        müssen Ihren Anwendern mitteilen, wie diese das selbst tun
+        können.  Die folgenden Unterabschnitte geben dazu Tipps für
+        einige geläufige E-Mail-Programme.</para>
+
+        <para>Der Open Security Filter fügt bei jeder E-Mail
+        einige Zeilen in den sogenannten Headerbereich der E-Mail
+        ein.  Die für diese Aufgabe relevante Headerzeile ist:
+<programlisting>
+X-Spam-Flag: YES
+</programlisting>
+        Diese Zeile erscheint nur in als Spam eingestuften E-Mails und
+        kann daher als Anhaltspunkt für Sortierregeln in
+        E-Mail-Programmen verwendet werden.</para>
+      </sect2>
+    </sect1>
+  </chapter>
+
+
+  <chapter id="installation">
+    <title>Installation</title>
+
+    <para>Der Open Security Filter ist ein eigenes Betriebssystem.
+    Sie müssen ihn also entweder auf einem eigenen Rechner
+    installieren oder auf einem anderen Rechner Platz schaffen.  Der
+    Open Security Filter installiert im zweiten Fall automatisch
+    ein Bootmenü, damit Sie andere Betriebssysteme auf dem Rechner
+    weiterhin booten können.  Unerfahrenen Anwendern empfehlen wir,
+    den Open Security Filter auf einem separaten Rechner zu
+    installieren.</para>
+
+    <sect1 id="installation-voraussetzungen">
+      <title>Systemvoraussetzungen</title>
+
+      <para>Bevor Sie mit der Installation beginnen, stellen Sie
+      sicher, dass Ihr System ausreichend dimensioniert ist.  Wir
+      empfehlen mindestens 256 MB RAM und mehrere GB Festplattenplatz,
+      abhängig vom erwarteten E-Mail-Aufkommen.</para>
+    </sect1>
+
+    <sect1 id="installation-boot">
+      <title>Booten</title>
+
+      <para>Um den Open Security Filter zu installieren, booten
+      Sie zunächst von der Installations-CD.  Drücken Sie am
+      Boot-Prompt die Eingabetaste.  Wenn Sie später Probleme zum
+      Beispiel mit der Hardwareunterstützung haben sollten, können Sie
+      am Bootprompt <keycap>F1</keycap> drücken und den ausgegebenen
+      Hilfetexten weiter Bootmöglichkeiten entnehmen.</para>
+
+      <para>Die Installationsroutine stellt Ihnen danach einige
+      Fragen, wie Sie Ihr System einrichten möchten.  Beantworten Sie
+      die Fragen nach Land oder Gebiet und Tastaturlayout entsprechend
+      Ihren Wünschen.</para>
+    </sect1>
+
+    <sect1 id="installation-netzwerk">
+      <title>IP-Adresse, Hostname und DNS</title>
+
+      <para>Als Nächstes kommen mehrere Fragen zur
+      Netzwerkeinrichtung.  Der Open Security Filter benötigt eine
+      feste IP-Adresse.  Eine dynamische IP-Adresse über DHCP
+      funktioniert nicht.  In der Regel sollte ein Filtersystem wie
+      der Open Security Filter zwei Netzwerkkarten und zwei
+      IP-Adressen haben: eine, die mit dem Internet verbunden ist, und
+      eine, die mit Ihrem internen Netz verbunden ist.  Für kleine
+      Installationen reicht aber auch eine Netzwerkkarte.</para>
+
+      <para>Überlegen Sie sich also eine Netzwerkkonfiguration für Ihr
+      Open Security Filter System.  Sie benötigen
+
+      <itemizedlist>
+        <listitem><para>eine IP-Adresse</para></listitem>
+        <listitem><para>die Netzmaske</para></listitem>
+        <listitem><para>die IP-Adresse des Gateways</para></listitem>
+        <listitem><para>die IP-Adressen der DNS-Nameserver</para></listitem>
+      </itemizedlist>
+
+      Bitte geben Sie diese Informationen entsprechend den Anweisungen
+      auf dem Bildschirm ein.</para>
+
+      <para>Der Open Security Filter benötigt außerdem einen
+      Hostnamen, der in Ihrem Netzwerk gültig ist und über DNS
+      aufgelöst werden kann.  Der Grund ist, dass der Open
+      Security Filter mit anderen Systemen E-Mail-Nachrichten
+      austauscht, was nur funktioniert, wenn der Absender einen
+      gültigen Hostnamen hat.  (Ansonsten würde er selbst eine Art
+      Spamabsender werden.)  Wählen Sie also einen Hostnamen für Ihr
+      System.  Wenn Ihr Netzwerk zum Beispiel die Domain
+      <literal>credativ.de</literal> hat, dann könnten Sie als
+      Hostnamen beispielsweise <literal>osf.credativ.de</literal>
+      verwenden.  Tragen Sie diesen Hostnamen im Nameserver Ihres
+      Netzwerks ein (oder in allen, wenn Sie mehrere haben).  Geben
+      Sie anschließend den gewählten Hostnamen
+      (z.B. <literal>osf</literal>) und den Domainnamen
+      (z.B. <literal>credativ.de</literal>) entsprechend den
+      Bildschirmanweisungen ein.  Wenn Sie den Nameserver richtig
+      konfiguriert hatten, müsste der gewählte Hostname schon als
+      Vorschlag in der Eingabemaske stehen.</para>
+    </sect1>
+
+    <sect1 id="installation-festplatte">
+      <title>Festplatten partitionieren</title>
+
+      <para>Im nächsten Schritt müssen Sie Ihre Festplatte für die
+      Installation partitionieren.  Wenn Sie den Open Security
+      Filter auf einem eigenen System installieren, können Sie einfach
+      <guimenuitem>Gesamtes Laufwerk löschen</guimenuitem> und
+      anschließend <guimenuitem>Alle Dateien auf eine
+      Partition</guimenuitem> wählen.  Bestätigen Sie die automatisch
+      berechnete Partitionstabelle mit <guimenuitem>Partitionierung
+      beenden und Änderungen übernehmen</guimenuitem> und sagen Sie
+      <guimenuitem>Ja</guimenuitem> zur anschließenden
+      Sicherheitsabfrage <guilabel>Änderungen auf die Festplatte
+      schreiben</guilabel>.</para>
+
+      <para>Für komplexere Installationsanforderungen wählen Sie
+      <guimenuitem>Partitionstabelle von Hand eingeben</guimenuitem>
+      und folgen Sie den weiteren Anweisungen auf dem Bildschirm.
+      Experten können sich die Partitionierung wunschgemäß
+      zusammenstellen.  Die am meisten beanspruchte Partition ist
+      <filename>/var</filename>.  Wenn Sie also zum Beispiel ein
+      RAID-System haben, könnten Sie diese Partition dorthin
+      platzieren.</para>
+    </sect1>
+
+    <sect1 id="installation-grub">
+      <title>Bootloader</title>
+
+      <para>Die Installationsroutine wird anschließend versuchen, den
+      Booloader GRUB zu installieren.  Der Bootloader GRUB bietet
+      Ihnen beim Booten ein Menü, mit dem Sie auch weitere
+      Betriebssysteme booten können, falls vorhanden.  Bejahen Sie die
+      Frage, ob GRUB installiert werden soll.</para>
+
+      <para>Das System bootet anschließend neu.  Achten Sie darauf,
+      dass die CD ausgeworfen und beim Systemstart nicht wieder
+      eingezogen wird.  Legen Sie die CD wieder ein, nachdem der
+      Bootvorgang angelaufen ist, weil später noch weitere Software
+      von der CD installiert werden wird.</para>
+    </sect1>
+
+    <sect1 id="installation-system">
+      <title>Systemkonfiguration</title>
+
+      <para>Abschließend werden noch einige Systemeinstellungen
+      abgefragt.  Beantworten Sie die Fragen zur Zeitzone entsprechend
+      den Umständen.  Anschließend wählen Sie ein Passwort für den
+      Systembenutzer <systemitem class="username">root</systemitem>,
+      sowie die weiteren Benutzerkonten <systemitem
+      class="username">admin</systemitem> und <systemitem
+      class="username">virus-quarantine</systemitem> (siehe auch <xref
+      linkend="konfiguration-passwort"/>).  Außerdem wird noch die
+      bevorzugte Methode zum Update der Virendatenbank abgefragt.
+      Wenn Sie sich unsicher sind, dann wählen Sie die
+      Voreinstellung.</para>
+
+      <para>Nachdem alle Einstellungen getätigt worden sind und alle
+      Software eingespielt ist, ist der Installationsvorgang
+      abgeschlossen.  Im folgenden Kapitel erfahren Sie, wie Sie den
+      Security Filter konfigurieren und verwenden.</para>
+    </sect1>
+  </chapter>
+
+
+  <chapter id="konfiguration">
+    <title>Konfiguration</title>
+
+    <para>Im Installationszustand ist der Open Security Filter
+    noch nicht betriebsbereit.  Sie müssen zunächst einige
+    Konfigurationseinstellungen vornehmen, die das System an Ihr
+    Netzwerk anpassen und festlegen, welche E-Mails gefiltert werden
+    sollen.  Später können Sie weitere Konfigurationseinstellungen
+    vornehmen, um den Open Security Filter im Detail an Ihren
+    Wünsche anzupassen.</para>
+
+    <sect1 id="konfiguration-zugriff">
+      <title>Zugriff</title>
+
+      <para>Auf die Konfiguration des Open Security Filters können
+      Sie auf verschiedene Arten zugreifen.</para>
+
+      <sect2 id="konfiguration-konsole">
+        <title>Zugriff auf lokaler Konsole</title>
+
+        <para>Wenn Sie an das Open Security Filter System einen
+        Monitor und eine Tastatur angeschlossen haben, dann können Sie
+        auf das System direkt über die Konsole zugreifen.  Das ist
+        zunächst natürlich für die anfängliche Installation notwendig.
+        Außerdem müssen Sie die Netzwerkkonfiguration zunächst lokal
+        einstellen.  Später ist es nicht mehr nötig, einen Monitor
+        oder eine Tastatur angeschlossen zu haben; Sie können auf das
+        System dann über Web-Oberfläche, SSH oder eine serielle
+        Konsole zugreifen.</para>
+      </sect2>
+
+      <sect2 id="konfiguration-seriell">
+        <title>Zugriff über serielle Konsole</title>
+
+        <para>Wenn Ihr System einen seriellen Port hat, dann können
+        Sie auf den Open Security Filter über eine serielle
+        Konsole zugreifen.  Sie haben damit den selben quasi-lokalen
+        Zugang wie als ob Sie direkt mit einer Tastatur am System
+        sitzen würden, können aber tatsächlich an einem anderen System
+        sitzen.  Um diese Möglichkeit zu nutzen, müssen Sie den
+        Open Security Filter und Ihren Arbeitsplatzrechner mit
+        einem seriellen Kabel verbinden und können dann mit einem
+        seriellen Kommunikationsprogramm, zum Beispiel
+        <application>minicom</application>, auf die Konsole
+        zugreifen.</para>
+      </sect2>
+
+      <sect2 id="konfiguration-ssh">
+        <title>Zugriff mit SSH</title>
+
+        <para>Sie können sich auch mit SSH auf dem Open Security
+        Filter einloggen, um bestimmte Administrationsaufgaben
+        wahrzunehmen.  Wenn Sie sich mit SSH auskennen, können Sie SSH
+        auch nach Ihren Bedürfnissen konfigurieren, zum Beispiel indem
+        Sie Ihren öffentlichen SSH-Schlüssel kopieren, um nicht jedes
+        Mal das Passwort eingeben zu müssen.</para>
+      </sect2>
+
+      <sect2 id="konfiguration-web">
+        <title>Zugriff auf die Web-Oberfläche</title>
+
+        <para>Der Großteil der Konfiguration und der regelmäßigen
+        Administration des Open Security Filter wird über die
+        Web-Oberfläche abgewickelt.  Um auf die Web-Oberfläche
+        zugreifen zu können, geben Sie in Ihrem Browser die URL
+        <literal>https://<replaceable>hostname</replaceable>/</literal>
+        ein, wobei <replaceable>hostname</replaceable> der in Ihrem
+        Netzwerk gültige Hostname für das Gerät ist.  Wenn Sie (noch)
+        keinen Hostnamen eingerichtet haben, dann können Sie
+        ersatzweise auch eine IP-Adresse angeben.  Beachten Sie aber,
+        dass der Open Security Filter für den Regelbetrieb einen
+        gültigen und auflösbaren Hostnamen benötigt.</para>
+
+        <para>Die Web-Oberfläche wird über eine verschlüsselte
+        Verbindung übertragen (HTTP über SSL/TLS, daher auch
+        <literal>https</literal> in der angegebenen URL).  Wenn Sie
+        die Web-Oberfläche zum ersten Mal aufrufen, dann wird sich Ihr
+        Browser sicherlich beschweren, dass die Gültigkeit des
+        Zertifikats nicht überprüft werden kann.  Wenn Sie den
+        Open Security Filter selbst installiert haben und Ihr
+        lokales Netzwerk kontrollieren, dann können Sie diese Warnung
+        ignorieren, weil in diesem Fall die Wahrscheinlichkeit, dass
+        das System vor Ihren Augen gehijackt wurde, sehr klein ist.
+        Wenn Sie sich mit SSL auskennen, können Sie gerne entsprechend
+        signierte Zertifikate einspielen oder die vorhandenen
+        Zertifikate in Ihre Browser einspielen.  In der Regel sollten
+        Sie die Warnung einfach wegklicken und den Browser anweisen,
+        sich das Zertifikat zu merken.</para>
+
+        <para>Wenn Sie die Web-Oberfläche aufrufen, dann werden Sie
+        nach einem Benutzernamen und einem Passwort gefragt.  Der
+        Benutzername lautet <literal>admin</literal>; das Passwort
+        haben Sie bei der Installation eingestellt und Sie können es
+        selbst ändern (siehe <xref linkend="konfiguration-passwort"
+        />).</para>
+
+        <para>Einstellungen, die über die Web-Oberfläche vorgenommen
+        werden, werden erst nach einiger Verzögerung aktiv, in der
+        Regel zwei Minuten.  Eine zeitgenaue Aktivierung der
+        Einstellungen ist nicht möglich und auch nicht sinnvoll, da
+        der zeitliche Ablauf der internen Verarbeitungsprozesse im
+        System von Anwendern sowieso nicht präzise kontrolliert werden
+        kann.</para>
+      </sect2>
+    </sect1>
+
+
+    <sect1 id="konfiguration-basis">
+      <title>Grundeinstellungen</title>
+
+      <para>Dieser Abschnitt beschreibt die Einstellungen, die Sie
+      vornehmen müssen, bevore Sie den Open Security Filter in
+      Betrieb nehmen können.</para>
+
+      <sect2 id="konfiguration-passwort">
+        <title>Benutzer und Passwörter</title>
+
+        <para>Der Open Security Filter hat drei wichtige
+        Benutzerkonten:
+
+          <variablelist>
+            <varlistentry>
+              <term><systemitem class="username">root</systemitem></term>
+              <listitem>
+                <para>Das ist der Superuser auf Linux-Systemen.  Sie
+                sollten sich nur als <systemitem
+                class="username">root</systemitem> anmelden, wenn es
+                nötig ist.</para>
+              </listitem>
+            </varlistentry>
+
+            <varlistentry>
+              <term><systemitem class="username">admin</systemitem></term>
+              <listitem>
+                <para>Dies ist ein Benutzerkonto für gewöhnliche
+                Administrationsaufgaben auf dem Open Security
+                Filter.  Insbesondere bestimmt dieses Benutzerkonto
+                das Passwort für die Web-Oberfläche.  Außerdem werden
+                in der Voreinstellung alle System-E-Mails an das
+                lokale Postfach dieses Benutzer geschickt.</para>
+              </listitem>
+            </varlistentry>
+
+            <varlistentry>
+              <term><systemitem class="username">virus-quarantine</systemitem></term>
+              <listitem>
+                <para>Dieses Benutzerkonto beherbergt das
+                Virusquarantäne-Postfach.  Sie benötigen das Passwort
+                für diesen Benutzer, um sich zur Verwaltung der
+                Quarantäne anmelden zu können.</para>
+              </listitem>
+            </varlistentry>
+          </variablelist>
+        </para>
+
+        <para>Um das Passwort eines Benutzerkontos zu ändern, loggen
+        Sie sich zuerst auf eine Konsole als <systemitem
+        class="username">root</systemitem> ein (entweder lokal, über
+        SSH oder die serielle Konsole).  Verwenden Sie dann den Befehl
+        <command>passwd</command>, zum Beispiel:
+<screen>
+osf:~# <userinput>passwd admin</userinput>
+Enter new UNIX password: <lineannotation>geben Sie hier das neue Passwort ein</lineannotation>
+Retype new UNIX password: <lineannotation>hier nochmal</lineannotation>
+passwd: password updated successfully
+</screen>
+        Das eingegebene Passwort wird nicht am Bildschirm angezeigt.</para>
+
+        <para>Experten können die Passwörter bei Bedarf auch mit
+        anderen Linux-Methoden ändern.  Das obige Beispiel ist
+        lediglich eine Möglichkeit.</para>
+      </sect2>
+
+      <sect2 id="konfiguration-system">
+        <title>Systemeinstellungen</title>
+
+        <para>Um die Grundeinstellungen des Open Security Filters
+        vorzunehmen, rufen Sie wie oben beschrieben die Web-Oberfläche
+        auf.  Wählen Sie unter <guilabel>Konfiguration</guilabel> den
+        Unterpunkt <guilabel>Systemkonfiguration</guilabel>.  Machen
+        Sie hier folgende Einstellungen:
+
+          <itemizedlist>
+            <listitem>
+              <para>Setzen Sie <guilabel>Security Filter
+              aktivieren</guilabel> auf
+              <guilabel>Ein</guilabel>.</para>
+            </listitem>
+
+            <listitem>
+              <para>Tragen Sie unter <guilabel>E-Mail-Domains</guilabel> die
+              E-Mail-Domains ein, für die Sie E-Mail entgegen nehmen
+              wollen.  Viele Installationen werden nur eine Domain
+              haben, aber wenn Sie mehrere haben, dann müssen Sie hier
+              alle eintragen.  Wenn Sie eine Domain nicht eintragen,
+              dann wird der Open Security Filter an die Domain
+              adressierte E-Mail ablehnen.</para>
+            </listitem>
+
+            <listitem>
+              <para>Tragen Sie unter <guilabel>Hauptdomain</guilabel>
+              die E-Mail-Domain ein, unter der das System
+              Benachrichtigungen, Bounce-Meldungen, Statusanzeigen und
+              Ähnliches verschicken soll.  Das sollte in der Regel
+              eine der zuvor eingestellten E-Mail-Domains sein,
+              meistens die am häufigsten verwendete.</para>
+            </listitem>
+
+            <listitem>
+              <para>Tragen Sie unter <guilabel>Relay-Host</guilabel>
+              den Hostnamen oder die IP-Adresse Ihres E-Mail-Servers
+              ein.  Der Open Security Filter bewahrt selbst keine
+              gefilterten E-Mails auf, sondern leitet geprüfte E-Mails
+              an diesen Server weiter.  Dieser Server wird
+              normalerweise Ihr bisheriger E-Mail-Server sein, von dem
+              sich Ihre Anwender die E-Mail dann mit POP oder IMAP
+              abrufen.</para>
+            </listitem>
+          </itemizedlist>
+
+        Wählen Sie jetzt zunächst <guibutton>Übernehmen</guibutton>,
+        um die Einstellungen zu aktivieren.  Ihr Open Security
+        Filter ist jetzt betriebsbereit.</para>
+      </sect2>
+
+      <sect2>
+        <title>MX oder Fetchmail einrichten</title>
+
+        <para>Um den Open Security Filter entgültig zu aktivieren,
+        müssen Sie alle DNS-MX-Einträge für die eingerichteten Domains
+        auf die IP-Adresse des Open Security Filters setzen.  Ab
+        diesem Zeitpunkt wird die E-Mail über den Open Security
+        Filter laufen.  Wenn Sie mögen, können Sie Ihren alten
+        E-Mail-Server als sogenannten Backup-MX konfigurieren.</para>
+
+        <para>Alternativ können Sie die E-Mails auch per Fetchmail von
+        einem anderen Mailserver abholen lassen.  Diese Einstellungen
+        können Sie unter <guilabel>Fetchmail konfigurieren</guilabel>
+        vornehmen.</para>
+      </sect2>
+    </sect1>
+
+    <sect1 id="konfiguration-weiter">
+      <title>Weitere Einstellungen</title>
+
+      <para>Nachdem Sie die im vorigen Abschnitt beschriebenen
+      Grundeinstellungen abgeschlossen haben, können Sie jetzt weitere
+      Einstellungen vornehmen, um das Verhalten des Open Security
+      Filter an Ihre Vorstellungen anzupassen.  Die im Folgenden
+      besprochenen Einstellungen werden alle über die Web-Oberfläche
+      durchgeführt.</para>
+
+      <sect2>
+        <title>Weitere System-Einstellungen</title>
+
+        <para>Unter <guilabel>Systemkonfiguration</guilabel> können
+        Sie weitere Einstellungen vornehmen:
+
+          <itemizedlist>
+            <listitem>
+              <para>Unter <guilabel>NTP-Server</guilabel> können Sie
+              eigene NTP-Server eintragen.  Da der Open Security
+              Filter mit Rechnern im Internet kommuniziert, ist es
+              wichtig, dass die interne Systemzeit richtig läuft.
+              NTP, das Network Time Protocol, sorgt dafür, dass an
+              NTP-Server angeschlossene Rechner eine akkurate
+              Systemzeit erhalten.  Die NTP-Server selbst sind in der
+              Regel über wiederum andere, übergeordnete NTP-Server an
+              Hochpräzisionsuhren gekoppelt.  Viele Netzwerke haben
+              interne NTP-Server eingerichtet.  Wenn das bei Ihnen der
+              Fall ist, sollten Sie diese hier eintragen.  Ansonsten
+              wird sich der Open Security Filter an öffentliche
+              NTP-Server im Internet wenden
+              (<literal>pool.ntp.org</literal>).</para>
+            </listitem>
+
+            <listitem>
+              <para>Unter <guilabel>Syslog-Server</guilabel> können
+              Sie einen zusätzlichen Syslog-Server einstellen.  Syslog
+              ist ein Systemprotokoll, über das die meisten
+              Systemdienste Logmeldungen abliefern.  Meistens schreibt
+              der Syslog-Dienst die Loginformationen in Dateien im
+              Verzeichnis <filename>/var/log/</filename>.  Wenn Sie in
+              Ihrem Netzwerk einen zentralen Syslog-Server haben, dann
+              können Sie diesen hier eintragen.  Wenn nicht, dann
+              können Sie sich auf dem Open Security Filter
+              einloggen und die Logdateien lokal lesen.</para>
+            </listitem>
+
+            <listitem>
+              <para>Unter <guilabel>System-E-Mails</guilabel> können
+              Sie eine E-Mail-Adresse angeben, an die System-E-Mails
+              weitergeleitet werden sollen.  Der Open Security
+              Filter versendet hin und wieder E-Mails an den
+              Administrator.  Diese sind meistens an <systemitem
+              class="username">root</systemitem>, <systemitem
+              class="username">postmaster</systemitem> oder andere
+              Systembenutzerkonten adressiert.  Der Open Security
+              Filter ist standardmäßig so konfiguriert, dass alle
+              diese E-Mails an den lokalen Benutzer <systemitem
+              class="username">admin</systemitem> geleitet werden.
+              Dessen E-Mails können Sie über den Webbrowser mit dem
+              mitgelieferten Webmail-Client lesen (erreichbar über die
+              Hauptseite der Web-Oberfläche).  Wenn Sie stattdessen
+              die System-E-Mails in ein externes Postfach liefern
+              wollen, dann geben Sie die E-Mail-Adresse an dieser
+              Stelle ein.</para>
+            </listitem>
+          </itemizedlist>
+        </para>
+      </sect2>
+
+      <sect2>
+        <title>Spam- und Virenfilter konfigurieren</title>
+
+        <para>Im Menüpunkt <guilabel>Spam- und Virenfilter
+        konfigurieren</guilabel> können Sie das Verhalten des Spam-
+        und Virenfilters im Detail einstellen.  Die einzelnen Punkte
+        sind selbst erklärend und hier nicht im Einzelnen beschrieben.
+        Nur einige Hinweise:
+
+          <itemizedlist>
+            <listitem>
+              <para>Sie können im Prinzip alle zu blockenden Endungen
+              im Kasten <guilabel>Weitere zu blockierende
+              Endungen</guilabel> eintragen.  Die Kästchen zum
+              Ankreuzen stellen nur eine Vorauswahl dar.</para>
+            </listitem>
+
+            <listitem>
+              <para>Eine Erklärung einiger häufiger Dateiendungen
+              erhalten Sie bei <ulink
+              url="http://support.microsoft.com/default.aspx?scid=kb;EN-US;q262631"
+              /> und bei <ulink
+              url="http://www.cknow.com/vtutor/vtextensions.htm"
+              />.</para>
+            </listitem>
+
+            <listitem>
+              <para>Das System vergleicht die von Ihnen zum Blockieren
+              angegebenen Endungen nicht mit den Endungen, die die
+              Anhänge vorgeben, sondern mit denen, die sie eigentlich
+              haben müssten.  Wenn Ihnen also jemand ein ZIP-Archiv
+              mit der Endung <filename>.abc</filename> schickt, dann
+              wird dieses nur genau dann blockiert, wenn Sie
+              <filename>.zip</filename> zum Blockieren ausgewählt
+              haben, egal ob Sie auch <filename>.abc</filename>
+              ausgewählt haben.  Ansonsten wäre dieser Schutz viel zu
+              einfach zu umgehen.</para>
+            </listitem>
+
+            <listitem>
+              <para>Koordinieren Sie die Einstellung zur
+              Spammarkierung mit den Filter- und Sortiermechanismen,
+              die Ihre Endwender einsetzen.  Beachten Sie, dass die
+              Spampunktzahl-Grenze nur die Punktzahl angibt, aber der
+              eine E-Mail als Spam <emphasis>markiert</emphasis> wird;
+              eine E-Mail mit Spamverdacht wird niemals vom System
+              verworfen.</para>
+            </listitem>
+          </itemizedlist>
+        </para>
+      </sect2>
+
+      <sect2>
+        <title>Spamfilterregeln konfigurieren</title>
+
+        <para>Im Menüpunkt <guilabel>Spamfilterregeln
+        konfigurieren</guilabel> können Sie individuelle Regeln
+        definieren, die anhand von in Ihren E-Mails auftretenden
+        Mustern die Spampunktzahl um einen gewählten Betrag erhöhen.
+        Damit können Sie den Security Filter an das individuelle
+        Spamaufkommen anpassen.</para>
+      </sect2>
+
+      <sect2>
+        <title>Externe Spamfilterdienste konfigurieren</title>
+
+        <para>Im Menüpunkt <guilabel>Externe Spamfilterdienste
+        konfigurieren</guilabel> können Sie externe Blocklisten ein-
+        oder ausschalten.  Diese sollten Sie in der Regeln
+        eingeschaltet lassen, es sei denn Ihre Netzwerkkonfiguration
+        erlaubt keine Zugriffe auf externe Server.</para>
+      </sect2>
+
+      <sect2>
+        <title>Sichern und wiederherstellen</title>
+
+        <para>Im Menüpunkt <guilabel>Sichern und
+        wiederherstellen</guilabel> können Sie ein Backup der
+        Konfiguration des Open Security Filter erstellen und
+        wieder einspielen.  Die damit gesicherte Konfiguration
+        beinhaltet sämtliche Einstellungen, die über die
+        Web-Oberfläche vorgenommen werden können, nicht aber direkt
+        über die Konsole durchgeführte Änderungen einschließlich der
+        Systempasswörter und auch nicht den Virusquarantänebereich und
+        die E-Mail-Queues.</para>
+
+        <para>Wenn Sie <guibutton>Sichern</guibutton> anklicken, dann
+        werden Sie je nach Browser gefragt, ob Sie die ausgewählte
+        Datei öffnen (oder ansehen o.ä.) oder speichern wollen.
+        Wählen Sie Speichern und wählen Sie ein Verzeichnis und einen
+        Dateinamen (in den meisten Browsern müsste ein Dateiname
+        vorgeschlagen werden).  Die Sicherungsdatei ist eine kleine
+        Textdatei, die Sie auf allen Medien speichern können und auch
+        auf anderen Systemen wieder einspielen können.  Vom manuellen
+        Bearbeiten der Sicherungsdatei wird aber abgeraten.</para>
+
+        <para>Im Kasten <guilabel>Konfiguration
+        wiederherstellen</guilabel> können Sie eine gesicherte
+        Konfiguration wieder einspielen.  Geben Sie im dargestellten
+        Eingabefeld den Namen der Sicherungsdatei ein (in vielen
+        Browsern haben Sie auch die Möglichkeit, eine Datei in einem
+        Dateiauswahlfenster zu suchen) und wählen Sie
+        <guibutton>Laden</guibutton>.  Die Konfiguration wird wie
+        gewohnt nach einigen Minuten aktiv werden.</para>
+
+        <para>Durch Klicken auf <guibutton>Zurücksetzen</guibutton>
+        wird die Konfiguration in den Ausgangszustand versetzt.  Das
+        sollten Sie aber nur machen, wenn Sie die Konfiguration extrem
+        verunstaltet haben.  Insbesondere werden hierbei alle
+        Domaineinstellungen gelöscht und der Open Security Filter
+        deaktiviert (d.h. keine E-Mails werden angenommen).  Sie
+        sollten danach wieder die Systemeinstellungen wie in <xref
+        linkend="konfiguration-system" /> beschrieben
+        durchführen.</para>
+      </sect2>
+    </sect1>
+  </chapter>
+
+
+  <chapter id="administration">
+    <title>Administration</title>
+
+    <para>Dieses Kapitel erläutert einige Wartungs- und
+    Administrationsaufgaben im Zusammenhang mit dem Open Security
+    Filter.</para>
+
+    <para>Experten können das System wie ein normales Debian GNU/Linux
+    System verwalten.  Achten Sie aber darauf, dass Sie keine
+    Konfigurationseinstellungen ändern, die für den Betrieb als
+    Open Security Filter erforderlich sind.</para>
+
+    <sect1 id="admin-log">
+      <title>Logdateien</title>
+
+      <para>Alle Logdateien liegen wie bei Linux üblich im Verzeichnis
+      <filename>/var/log/</filename>.  Alle Logdateien werden
+      regelmäßig rotiert; die Einstellungen dazu finden Sie unter
+      <filename>/etc/logrotate.d/</filename>.  Wenn Sie Logdateien
+      länger sichern oder archivieren wollen, dann ist es sinnvoll,
+      einen externen Syslog-Server zu konfigurieren (siehe <xref
+      linkend="konfiguration-weiter" />).</para>
+    </sect1>
+
+    <sect1 id="admin-stats">
+      <title>Systemstatistiken</title>
+
+      <para>In der Web-Oberfläche finden Sie unter dem Punkt
+      <quote>Überwachen</quote> einige Systemstatistiken in grafischer
+      Aufbereitung.  Diese sollen helfen, das E-Mail-Aufkommen und die
+      Systemlast zu überwachen.  Selbstverständlich können Sie auch
+      eigene Überwachungs- oder Analysewerkzeuge einsetzen.</para>
+    </sect1>
+    
+    <sect1 id="admin-firewall">
+      <title>Firewall</title>
+      
+      <para>Der Open Security Filter ist nicht mit einer Firewall
+      (d.h. einem Paketfilter) vorkonfiguriert.  Wenn Sie eine
+      Firewall einrichten möchten, empfehlen wir den Einsatz von
+      <application>Firehol</application>.  Beispielkonfigurationen
+      finden Sie in
+      <filename>/usr/share/osf-base/base-conf/firehol.conf-1nic</filename>
+      (für Systeme mit einer Netzwerkkarte) und
+      <filename>/usr/share/osf-base/base-conf/firehol.conf-2nic</filename>
+      (für Systeme mit zwei Netzwerkkarten).  Um die Firewall zu starten
+
+      <orderedlist>
+        <listitem>
+          <para>kopieren Sie die passende Konfiguration nach
+          <filename>/etc/firehol/firehol.conf</filename>,</para>
+        </listitem>
+
+        <listitem>
+          <para>bearbeiten Sie die Datei
+          <filename>/etc/default/firehol</filename> und setzen Sie
+          <literal>START_FIREHOL=YES</literal>,</para>
+        </listitem>
+
+        <listitem>
+          <para>starten Sie die Firewall mit
+          <command>/etc/init.d/firehol start</command>.</para>
+        </listitem>
+      </orderedlist>
+
+      Weitere Informationen zur Konfiguration erhalten Sie mit den
+      Befehlen <command>man 1 firehol</command> und <command>man 5
+      firehol.conf</command>.</para>
+    </sect1>
+
+<!--
+    <sect1 id="admin-updates">
+      <title>Software-Updates</title>
+
+      <para>TBD</para>
+    </sect1>
+-->
+  </chapter>
+</book>

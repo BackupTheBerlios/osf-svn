@@ -1,0 +1,15 @@
+<div class="box">
+  <h3>[% title %]</h3>
+  <p>[% description %]</p>
+  <p>
+[% length = length ? length : config.$field.length * 2 -%]
+[% IF num -%]
+[% FOREACH i = [ 1 .. num ] -%]
+[% var = "$field$i" -%]
+    <input type="text" name="[% var %]" size="[% length %]" value="[% config.$var FILTER html %]" />[% IF i < num %]<br />[% END %]
+[% END -%]
+[% ELSE -%]
+    <input type="text" name="[% field %]" size="[% length %]" value="[% config.$field FILTER html %]" />
+[% END -%]
+  </p>
+</div>

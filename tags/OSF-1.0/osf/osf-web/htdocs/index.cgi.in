@@ -1,0 +1,31 @@
+#! @PERL@
+
+BEGIN {
+    unshift @INC, '@datadir@';
+}
+
+use strict;
+no strict qw(refs);
+use warnings;
+use English;
+
+use CGI qw(:standard);
+
+use OSF::HTML;
+use OSF::Config;
+
+use Template;
+
+my $template = Template->new( { INCLUDE_PATH => "@datadir@/templates/htdocs" } );
+
+
+my $cgi = new CGI();
+
+html_top($cgi);
+
+$template->process('index')
+  or die $template->error();
+
+html_bottom();
+
+exit 0;

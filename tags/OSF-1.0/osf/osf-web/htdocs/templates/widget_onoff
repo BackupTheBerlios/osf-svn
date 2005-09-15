@@ -1,0 +1,9 @@
+<div class="box">
+  <h3>[% title %]</h3>
+  <p>[% description %]</p>
+  <p>
+    <input type='radio' name='[% field %]' value='1'[% IF config.$field %] checked='checked'[% END %] />&nbsp;Ein
+    &nbsp;&nbsp;&nbsp;
+    <input type='radio' name='[% field %]' value='0'[% IF !config.$field %] checked='checked'[% END %] />&nbsp;Aus
+  </p>
+</div>

@@ -1,0 +1,49 @@
+[% WRAPPER common_htmlpage title="Sichern und Wiederherstellen der Konfiguration" %]
+
+<div class="box">
+  <h3>Konfiguration sichern</h3>
+  <p>
+    Wenn Sie den folgenden Knopf drücken, können Sie sich eine Kopie
+    der aktuellen Konfiguration des Open Security Filter
+    herunterladen. Diese Datei können Sie zu einem späteren Zeitpunkt
+    wieder einspielen.
+  </p>
+  <p>
+    <form action="" method="get">
+      <input type='submit' name='backup' value='Sichern' />
+    </form>
+  </p>
+</div>
+
+<div class="box">
+  <h3>Konfiguration wiederherstellen</h3>
+  <p>
+    Um eine mit der obigen Option gesicherte Konfiguration
+    wiederherzustellen, geben Sie den Dateinamen unten ein und wählen
+    Sie Laden.
+  </p>
+  <p>
+    <form action="" method="post" enctype="multipart/form-data">
+      Dateiname:&nbsp;<input type='file' name='file' />&nbsp;<input type='submit' name='restore' value='Laden' />
+    </form>
+  </p>
+</div>
+
+<div class="box">
+  <h3>Konfiguration zurücksetzen</h3>
+  <p>
+    Wenn Sie den folgenden Knopf drücken, wird die Konfiguration in
+    den Ausgangszustand zurückversetzt.
+  </p>
+  <p>
+    <form action="" method="post">
+      <input type='submit' name='reset' value='Zurücksetzen' />
+    </form>
+  </p>
+</div>
+
+<p>
+<a href="./">Zurück zur Hauptseite</a>
+</p>
+
+[% END %]

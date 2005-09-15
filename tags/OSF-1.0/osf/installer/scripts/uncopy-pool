@@ -1,0 +1,16 @@
+#! /bin/bash -e
+
+if [ $# -lt 2 ]; then
+	echo "usage: $0 sourcedir targetdir" 1>&2
+	exit 1
+fi
+
+source=$1
+target=$2
+
+for x in $(cd $source && find . -name '*.deb' -or -name '*.udeb'); do
+	if [ -f $target/$x ]; then
+		rm $target/$x
+		rmdir --ignore-fail-on-non-empty -p $(dirname $target/$x)
+	fi
+done

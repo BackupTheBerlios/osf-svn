@@ -1,0 +1,15 @@
+Source: osf-utils
+Section: misc
+Priority: optional
+Maintainer: Peter Eisentraut <peter.eisentraut@credativ.de>
+Build-Depends-Indep: debhelper (>= 4.1.0), cdbs (>= 0.4.0)
+Standards-Version: 3.6.1.1
+
+Package: osf-utils
+Architecture: all
+Depends: openssl,
+ ${shlibs:Depends}, ${misc:Depends}
+Recommends: apache-ssl, postfix-tls
+Description: Open Security Filter utilities
+ This package contains various utilities that are used for the Open
+ Security Filter suite.

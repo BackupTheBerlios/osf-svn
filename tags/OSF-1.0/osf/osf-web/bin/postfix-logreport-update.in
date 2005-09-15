@@ -1,0 +1,48 @@
+#! /bin/bash
+
+set -e
+
+PATH=/sbin:/bin:/usr/sbin:/usr/bin:$PATH
+
+
+if [ -e /etc/debian_version ]; then
+	maillogfile=mail.log
+elif [ -e /etc/SuSE-release ]; then
+	maillogfile=mail
+else
+	echo "$0: operating system not recognized" 1>&2
+	exit 1
+fi
+
+
+if [ -n "$1" ]; then
+	OUTDIR=$1
+else
+	echo "$0: no output directory specified" 1>&2
+fi
+
+mkdir -p $OUTDIR
+
+
+anything_changed=no
+
+for x in $(ls /var/log/${maillogfile}-*.gz); do
+	date=$(expr $x : '.*'${maillogfile}'-\(.*\).gz')
+	if [ ! -e "$OUTDIR/mailreport-$date.txt" ]; then
+		zcat $x | pflogsumm --iso_date_time --zero_fill > "$OUTDIR/mailreport-$date.txt"
+		anything_changed=yes
+	fi
+done
+
+if [ $anything_changed=yes ] || [ ! -e $DIR/mailreport-weekly.txt ]; then
+	zcat $(ls -t /var/log/${maillogfile}-*.gz | sed 7q) | pflogsumm --iso_date_time --zero_fill > "$OUTDIR/mailreport-weekly.txt"
+fi
+
+for x in $(ls $OUTDIR/mailreport-[0-9]*.txt); do
+	date=$(expr $x : '.*mailreport-\(.*\).txt')
+	if [ ! -e "/var/log/${maillogfile}-$date.gz" ]; then
+		rm $x
+	fi
+done
+
+exit 0
